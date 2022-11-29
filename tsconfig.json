@@ -1,0 +1,9 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"allowJs": false,
+		"declaration": true,
+		"esModuleInterop": true,
+		"jsx": "react"
+	}
+}
