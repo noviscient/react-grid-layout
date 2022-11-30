@@ -57,14 +57,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var React = __importStar(require("react"));
-var isEqual_1 = __importDefault(require("lodash/isEqual"));
+exports.RGLGrid = void 0;
 var clsx_1 = __importDefault(require("clsx"));
-var coreUtils_1 = require("../utils/coreUtils");
+var isEqual_1 = __importDefault(require("lodash/isEqual"));
+var React = __importStar(require("react"));
+var rglFastPropsEqual_1 = require("../props/rglFastPropsEqual");
+var coreUtils_1 = __importDefault(require("../utils/coreUtils"));
 var calculateUtils_1 = require("../utils/calculateUtils");
-var GridItem_1 = __importDefault(require("./GridItem"));
-var RGLPropTypes_1 = __importDefault(require("../RGLPropTypes"));
-var fastRGLPropsEqual_1 = require("../fastRGLPropsEqual");
+var RGLPropTypes_1 = __importDefault(require("../props/RGLPropTypes"));
+var RGLGridItem_1 = __importDefault(require("./RGLGridItem"));
+var bottom = coreUtils_1["default"].bottom, childrenEqual = coreUtils_1["default"].childrenEqual, cloneLayoutItem = coreUtils_1["default"].cloneLayoutItem, compact = coreUtils_1["default"].compact, compactType = coreUtils_1["default"].compactType, getAllCollisions = coreUtils_1["default"].getAllCollisions, getLayoutItem = coreUtils_1["default"].getLayoutItem, moveElement = coreUtils_1["default"].moveElement, noop = coreUtils_1["default"].noop, synchronizeLayoutWithChildren = coreUtils_1["default"].synchronizeLayoutWithChildren, withLayoutItem = coreUtils_1["default"].withLayoutItem;
 // End Types
 var fallbackCompactType = 'vertical';
 var layoutClassName = 'react-grid-layout';
@@ -79,15 +81,15 @@ catch (e) {
 /**
  * A reactive, fluid grid layout with draggable, resizable components.
  */
-var ReactGridLayout = /** @class */ (function (_super) {
-    __extends(ReactGridLayout, _super);
-    function ReactGridLayout() {
+var RGLGrid = /** @class */ (function (_super) {
+    __extends(RGLGrid, _super);
+    function RGLGrid() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.state = {
             activeDrag: undefined,
-            layout: (0, coreUtils_1.synchronizeLayoutWithChildren)(_this.props.layout, _this.props.children, _this.props.cols, 
+            layout: synchronizeLayoutWithChildren(_this.props.layout, _this.props.children, _this.props.cols, 
             // Legacy support for verticalCompact: false
-            (0, coreUtils_1.compactType)(_this.props), _this.props.allowOverlap),
+            compactType(_this.props), _this.props.allowOverlap),
             mounted: false,
             oldDragItem: null,
             oldLayout: null,
@@ -108,11 +110,11 @@ var ReactGridLayout = /** @class */ (function (_super) {
         _this.onDragStart = function (i, x, y, _a) {
             var e = _a.e, node = _a.node;
             var layout = _this.state.layout;
-            var l = (0, coreUtils_1.getLayoutItem)(layout, i);
+            var l = getLayoutItem(layout, i);
             if (!l)
                 return;
             _this.setState({
-                oldDragItem: (0, coreUtils_1.cloneLayoutItem)(l),
+                oldDragItem: cloneLayoutItem(l),
                 oldLayout: layout
             });
             return _this.props.onDragStart(layout, l, l, null, e, node);
@@ -131,7 +133,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
             var oldDragItem = _this.state.oldDragItem;
             var layout = _this.state.layout;
             var _d = _this.props, cols = _d.cols, allowOverlap = _d.allowOverlap, preventCollision = _d.preventCollision;
-            var l = (0, coreUtils_1.getLayoutItem)(layout, i);
+            var l = getLayoutItem(layout, i);
             if (!l)
                 return;
             // Create placeholder (display only)
@@ -145,12 +147,12 @@ var ReactGridLayout = /** @class */ (function (_super) {
             };
             // Move the element to the dragged location.
             var isUserAction = true;
-            layout = (0, coreUtils_1.moveElement)(layout, l, x, y, isUserAction, preventCollision, (_b = (0, coreUtils_1.compactType)(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols, allowOverlap);
+            layout = moveElement(layout, l, x, y, isUserAction, preventCollision, (_b = compactType(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols, allowOverlap);
             _this.props.onDrag(layout, oldDragItem, l, placeholder, e, node);
             _this.setState({
                 layout: allowOverlap
                     ? layout
-                    : (0, coreUtils_1.compact)(layout, (_c = (0, coreUtils_1.compactType)(_this.props)) !== null && _c !== void 0 ? _c : fallbackCompactType, cols),
+                    : compact(layout, (_c = compactType(_this.props)) !== null && _c !== void 0 ? _c : fallbackCompactType, cols),
                 activeDrag: placeholder
             });
         };
@@ -170,17 +172,17 @@ var ReactGridLayout = /** @class */ (function (_super) {
             var oldDragItem = _this.state.oldDragItem;
             var layout = _this.state.layout;
             var _d = _this.props, cols = _d.cols, preventCollision = _d.preventCollision, allowOverlap = _d.allowOverlap;
-            var l = (0, coreUtils_1.getLayoutItem)(layout, i);
+            var l = getLayoutItem(layout, i);
             if (!l)
                 return;
             // Move the element here
             var isUserAction = true;
-            layout = (0, coreUtils_1.moveElement)(layout, l, x, y, isUserAction, preventCollision, (_b = (0, coreUtils_1.compactType)(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols, allowOverlap);
+            layout = moveElement(layout, l, x, y, isUserAction, preventCollision, (_b = compactType(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols, allowOverlap);
             _this.props.onDragStop(layout, oldDragItem !== null && oldDragItem !== void 0 ? oldDragItem : undefined, l, null, e, node);
             // Set state
             var newLayout = allowOverlap
                 ? layout
-                : (0, coreUtils_1.compact)(layout, (_c = (0, coreUtils_1.compactType)(_this.props)) !== null && _c !== void 0 ? _c : fallbackCompactType, cols);
+                : compact(layout, (_c = compactType(_this.props)) !== null && _c !== void 0 ? _c : fallbackCompactType, cols);
             var oldLayout = _this.state.oldLayout;
             _this.setState({
                 activeDrag: undefined,
@@ -193,11 +195,11 @@ var ReactGridLayout = /** @class */ (function (_super) {
         _this.onResizeStart = function (i, w, h, _a) {
             var e = _a.e, node = _a.node;
             var layout = _this.state.layout;
-            var l = (0, coreUtils_1.getLayoutItem)(layout, i);
+            var l = getLayoutItem(layout, i);
             if (!l)
                 return;
             _this.setState({
-                oldResizeItem: (0, coreUtils_1.cloneLayoutItem)(l),
+                oldResizeItem: cloneLayoutItem(l),
                 oldLayout: _this.state.layout
             });
             _this.props.onResizeStart(layout, l, l, null, e, node);
@@ -207,12 +209,12 @@ var ReactGridLayout = /** @class */ (function (_super) {
             var e = _a.e, node = _a.node;
             var _c = _this.state, layout = _c.layout, oldResizeItem = _c.oldResizeItem;
             var _d = _this.props, cols = _d.cols, preventCollision = _d.preventCollision, allowOverlap = _d.allowOverlap;
-            var _e = (0, coreUtils_1.withLayoutItem)(layout, i, function (l) {
+            var _e = withLayoutItem(layout, i, function (l) {
                 // Something like quad tree should be used
                 // to find collisions faster
                 var hasCollisions;
                 if (preventCollision && !allowOverlap) {
-                    var collisions = (0, coreUtils_1.getAllCollisions)(layout, __assign(__assign({}, l), { w: w, h: h })).filter(function (layoutItem) { return layoutItem.i !== l.i; });
+                    var collisions = getAllCollisions(layout, __assign(__assign({}, l), { w: w, h: h })).filter(function (layoutItem) { return layoutItem.i !== l.i; });
                     hasCollisions = collisions.length > 0;
                     // If we're colliding, we need adjust the placeholder.
                     if (hasCollisions) {
@@ -254,7 +256,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
             _this.setState({
                 layout: allowOverlap
                     ? newLayout
-                    : (0, coreUtils_1.compact)(newLayout, (_b = (0, coreUtils_1.compactType)(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols),
+                    : compact(newLayout, (_b = compactType(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols),
                 activeDrag: placeholder
             });
         };
@@ -263,12 +265,12 @@ var ReactGridLayout = /** @class */ (function (_super) {
             var e = _a.e, node = _a.node;
             var _c = _this.state, layout = _c.layout, oldResizeItem = _c.oldResizeItem;
             var _d = _this.props, cols = _d.cols, allowOverlap = _d.allowOverlap;
-            var l = (0, coreUtils_1.getLayoutItem)(layout, i);
+            var l = getLayoutItem(layout, i);
             _this.props.onResizeStop(layout, oldResizeItem, l, null, e, node);
             // Set state
             var newLayout = allowOverlap
                 ? layout
-                : (0, coreUtils_1.compact)(layout, (_b = (0, coreUtils_1.compactType)(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols);
+                : compact(layout, (_b = compactType(_this.props)) !== null && _b !== void 0 ? _b : fallbackCompactType, cols);
             var oldLayout = _this.state.oldLayout;
             _this.setState({
                 activeDrag: null,
@@ -337,7 +339,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
                     containerWidth: width,
                     containerPadding: containerPadding || margin
                 };
-                var calculatedPosition = (0, calculateUtils_1.calcXY)(positionParams, 
+                var calculatedPosition = (0, calculateUtils_1.rglCalcXY)(positionParams, 
                 // layerY,
                 // layerX,
                 actualLayerY, actualLayerX, finalDroppingItem.w, finalDroppingItem.h);
@@ -365,7 +367,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
             var _a;
             var _b = _this.props, droppingItem = _b.droppingItem, cols = _b.cols;
             var layout = _this.state.layout;
-            var newLayout = (0, coreUtils_1.compact)(layout.filter(function (l) { return l.i !== droppingItem.i; }), (_a = (0, coreUtils_1.compactType)(_this.props)) !== null && _a !== void 0 ? _a : fallbackCompactType, cols);
+            var newLayout = compact(layout.filter(function (l) { return l.i !== droppingItem.i; }), (_a = compactType(_this.props)) !== null && _a !== void 0 ? _a : fallbackCompactType, cols);
             _this.setState({
                 layout: newLayout,
                 droppingDOMNode: null,
@@ -404,14 +406,14 @@ var ReactGridLayout = /** @class */ (function (_super) {
         };
         return _this;
     }
-    ReactGridLayout.prototype.componentDidMount = function () {
+    RGLGrid.prototype.componentDidMount = function () {
         var _a, _b, _c;
         this.setState({ mounted: true, rect: (_c = (_b = (_a = this.props.innerRef) === null || _a === void 0 ? void 0 : _a.current) === null || _b === void 0 ? void 0 : _b.getBoundingClientRect()) !== null && _c !== void 0 ? _c : null });
         // Possibly call back with layout on mount. This should be done after correcting the layout width
         // to ensure we don't rerender with the wrong width.
         this.onLayoutMaybeChanged(this.state.layout, this.props.layout);
     };
-    ReactGridLayout.getDerivedStateFromProps = function (nextProps, prevState) {
+    RGLGrid.getDerivedStateFromProps = function (nextProps, prevState) {
         var newLayoutBase;
         if (prevState.activeDrag) {
             return null;
@@ -422,7 +424,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
             nextProps.compactType !== prevState.compactType) {
             newLayoutBase = nextProps.layout;
         }
-        else if (!(0, coreUtils_1.childrenEqual)(nextProps.children, prevState.children)) {
+        else if (!childrenEqual(nextProps.children, prevState.children)) {
             // If children change, also regenerate the layout. Use our state
             // as the base in case because it may be more up to date than
             // what is in props.
@@ -430,7 +432,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
         }
         // We need to regenerate the layout.
         if (newLayoutBase) {
-            var newLayout = (0, coreUtils_1.synchronizeLayoutWithChildren)(newLayoutBase, nextProps.children, nextProps.cols, (0, coreUtils_1.compactType)(nextProps), nextProps.allowOverlap);
+            var newLayout = synchronizeLayoutWithChildren(newLayoutBase, nextProps.children, nextProps.cols, compactType(nextProps), nextProps.allowOverlap);
             return {
                 layout: newLayout,
                 // We need to save these props to state for using
@@ -442,18 +444,18 @@ var ReactGridLayout = /** @class */ (function (_super) {
         }
         return null;
     };
-    ReactGridLayout.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+    RGLGrid.prototype.shouldComponentUpdate = function (nextProps, nextState) {
         return (
         // NOTE: this is almost always unequal. Therefore the only way to get better performance
         // from SCU is if the user intentionally memoizes children. If they do, and they can
         // handle changes properly, performance will increase.
         this.props.children !== nextProps.children ||
-            !(0, fastRGLPropsEqual_1.fastRGLPropsEqual)(this.props, nextProps) ||
+            !(0, rglFastPropsEqual_1.rglFastGridPropsEqual)(this.props, nextProps) ||
             this.state.activeDrag !== nextState.activeDrag ||
             this.state.mounted !== nextState.mounted ||
             this.state.droppingPosition !== nextState.droppingPosition);
     };
-    ReactGridLayout.prototype.componentDidUpdate = function (prevProps, prevState) {
+    RGLGrid.prototype.componentDidUpdate = function (prevProps, prevState) {
         if (!this.state.activeDrag) {
             var newLayout = this.state.layout;
             var oldLayout = prevState.layout;
@@ -464,10 +466,10 @@ var ReactGridLayout = /** @class */ (function (_super) {
      * Calculates a pixel value for the container.
      * @return {String} Container height in pixels.
      */
-    ReactGridLayout.prototype.containerHeight = function () {
+    RGLGrid.prototype.containerHeight = function () {
         if (!this.props.autoSize)
             return;
-        var nbRow = (0, coreUtils_1.bottom)(this.state.layout);
+        var nbRow = bottom(this.state.layout);
         var containerPaddingY = this.props.containerPadding
             ? this.props.containerPadding[1]
             : this.props.margin[1];
@@ -476,7 +478,7 @@ var ReactGridLayout = /** @class */ (function (_super) {
             containerPaddingY * 2 +
             'px');
     };
-    ReactGridLayout.prototype.onLayoutMaybeChanged = function (newLayout, oldLayout) {
+    RGLGrid.prototype.onLayoutMaybeChanged = function (newLayout, oldLayout) {
         if (!oldLayout)
             oldLayout = this.state.layout;
         if (!(0, isEqual_1["default"])(oldLayout, newLayout)) {
@@ -487,13 +489,13 @@ var ReactGridLayout = /** @class */ (function (_super) {
      * Create a placeholder object.
      * @return {Element} Placeholder div.
      */
-    ReactGridLayout.prototype.placeholder = function () {
+    RGLGrid.prototype.placeholder = function () {
         var activeDrag = this.state.activeDrag;
         if (!activeDrag)
             return null;
         var _a = this.props, width = _a.width, cols = _a.cols, margin = _a.margin, containerPadding = _a.containerPadding, rowHeight = _a.rowHeight, maxRows = _a.maxRows, useCSSTransforms = _a.useCSSTransforms, transformScale = _a.transformScale;
         // {...this.state.activeDrag} is pretty slow, actually
-        return (React.createElement(GridItem_1["default"], { w: activeDrag.w, h: activeDrag.h, x: activeDrag.x, y: activeDrag.y, i: activeDrag.i, className: 'react-grid-placeholder', containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, isDraggable: false, isResizable: false, isBounded: false, useCSSTransforms: useCSSTransforms, transformScale: transformScale },
+        return (React.createElement(RGLGridItem_1["default"], { w: activeDrag.w, h: activeDrag.h, x: activeDrag.x, y: activeDrag.y, i: activeDrag.i, className: 'react-grid-placeholder', containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, isDraggable: false, isResizable: false, isBounded: false, useCSSTransforms: useCSSTransforms, transformScale: transformScale },
             React.createElement("div", null)));
     };
     /**
@@ -501,10 +503,10 @@ var ReactGridLayout = /** @class */ (function (_super) {
      * @param  {Element} child React element.
      * @return {Element}       Element wrapped in draggable and properly placed.
      */
-    ReactGridLayout.prototype.processGridItem = function (child, isDroppingItem) {
+    RGLGrid.prototype.processGridItem = function (child, isDroppingItem) {
         if (!child || !child.key)
             return null;
-        var l = (0, coreUtils_1.getLayoutItem)(this.state.layout, String(child.key));
+        var l = getLayoutItem(this.state.layout, String(child.key));
         if (!l)
             return null;
         var _a = this.props, width = _a.width, cols = _a.cols, margin = _a.margin, containerPadding = _a.containerPadding, rowHeight = _a.rowHeight, maxRows = _a.maxRows, isDraggable = _a.isDraggable, isResizable = _a.isResizable, isBounded = _a.isBounded, useCSSTransforms = _a.useCSSTransforms, transformScale = _a.transformScale, draggableCancel = _a.draggableCancel, draggableHandle = _a.draggableHandle, resizeHandles = _a.resizeHandles, resizeHandle = _a.resizeHandle;
@@ -521,14 +523,14 @@ var ReactGridLayout = /** @class */ (function (_super) {
         var resizeHandlesOptions = l.resizeHandles || resizeHandles;
         // isBounded set on child if set on parent, and child is not explicitly false
         var bounded = draggable && isBounded && l.isBounded !== false;
-        return (React.createElement(GridItem_1["default"], { containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, cancel: draggableCancel, handle: draggableHandle, onDragStop: this.onDragStop, onDragStart: this.onDragStart, onDrag: this.onDrag, onResizeStart: this.onResizeStart, onResize: this.onResize, onResizeStop: this.onResizeStop, isDraggable: draggable, isResizable: resizable, isBounded: bounded, useCSSTransforms: useCSSTransforms && mounted, usePercentages: !mounted, transformScale: transformScale, w: l.w, h: l.h, x: l.x, y: l.y, i: l.i, minH: l.minH, minW: l.minW, maxH: l.maxH, maxW: l.maxW, static: l.static, droppingPosition: isDroppingItem ? (droppingPosition !== null && droppingPosition !== void 0 ? droppingPosition : undefined) : undefined, resizeHandles: resizeHandlesOptions, resizeHandle: resizeHandle }, child));
+        return (React.createElement(RGLGridItem_1["default"], { containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, cancel: draggableCancel, handle: draggableHandle, onDragStop: this.onDragStop, onDragStart: this.onDragStart, onDrag: this.onDrag, onResizeStart: this.onResizeStart, onResize: this.onResize, onResizeStop: this.onResizeStop, isDraggable: draggable, isResizable: resizable, isBounded: bounded, useCSSTransforms: useCSSTransforms && mounted, usePercentages: !mounted, transformScale: transformScale, w: l.w, h: l.h, x: l.x, y: l.y, i: l.i, minH: l.minH, minW: l.minW, maxH: l.maxH, maxW: l.maxW, static: l.static, droppingPosition: isDroppingItem ? (droppingPosition !== null && droppingPosition !== void 0 ? droppingPosition : undefined) : undefined, resizeHandles: resizeHandlesOptions, resizeHandle: resizeHandle }, child));
     };
-    ReactGridLayout.prototype.render = function () {
+    RGLGrid.prototype.render = function () {
         var _this = this;
         var _a = this.props, className = _a.className, style = _a.style, isDroppable = _a.isDroppable, innerRef = _a.innerRef;
         var mergedClassName = (0, clsx_1["default"])(layoutClassName, className);
         var mergedStyle = __assign({ height: this.containerHeight() }, style);
-        return (React.createElement("div", { ref: innerRef, className: mergedClassName, style: mergedStyle, onDrop: isDroppable ? this.onDrop : coreUtils_1.noop, onDragLeave: isDroppable ? this.onDragLeave : coreUtils_1.noop, onDragEnter: isDroppable ? this.onDragEnter : coreUtils_1.noop, onDragOver: isDroppable ? this.onDragOver : coreUtils_1.noop },
+        return (React.createElement("div", { ref: innerRef, className: mergedClassName, style: mergedStyle, onDrop: isDroppable ? this.onDrop : noop, onDragLeave: isDroppable ? this.onDragLeave : noop, onDragEnter: isDroppable ? this.onDragEnter : noop, onDragOver: isDroppable ? this.onDragOver : noop },
             React.Children.map(this.props.children, function (child) {
                 return _this.processGridItem(child);
             }),
@@ -538,10 +540,10 @@ var ReactGridLayout = /** @class */ (function (_super) {
             this.placeholder()));
     };
     // TODO publish internal ReactClass displayName transform
-    ReactGridLayout.displayName = 'ReactGridLayout';
+    RGLGrid.displayName = 'RGLGrid';
     // Refactored to another module to make way for preval
-    ReactGridLayout.propTypes = RGLPropTypes_1["default"];
-    ReactGridLayout.defaultProps = {
+    RGLGrid.propTypes = RGLPropTypes_1["default"];
+    RGLGrid.defaultProps = {
         innerRef: React.createRef(),
         autoSize: true,
         cols: 12,
@@ -570,16 +572,17 @@ var ReactGridLayout = /** @class */ (function (_super) {
             w: 1
         },
         resizeHandles: ['se'],
-        onLayoutChange: coreUtils_1.noop,
-        onDragStart: coreUtils_1.noop,
-        onDrag: coreUtils_1.noop,
-        onDragStop: coreUtils_1.noop,
-        onResizeStart: coreUtils_1.noop,
-        onResize: coreUtils_1.noop,
-        onResizeStop: coreUtils_1.noop,
-        onDrop: coreUtils_1.noop,
+        onLayoutChange: noop,
+        onDragStart: noop,
+        onDrag: noop,
+        onDragStop: noop,
+        onResizeStart: noop,
+        onResize: noop,
+        onResizeStop: noop,
+        onDrop: noop,
         onDropDragOver: function () { return false; }
     };
-    return ReactGridLayout;
+    return RGLGrid;
 }(React.Component));
-exports["default"] = ReactGridLayout;
+exports.RGLGrid = RGLGrid;
+exports["default"] = RGLGrid;

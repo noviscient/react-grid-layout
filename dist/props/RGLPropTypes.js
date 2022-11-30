@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.resizeHandleType = exports.resizeHandleAxesType = void 0;
+exports.rglResizeHandleType = exports.rglResizeHandleAxesType = void 0;
 // @flow
 var prop_types_1 = __importDefault(require("prop-types"));
 var react_1 = __importDefault(require("react"));
@@ -17,9 +17,9 @@ var react_1 = __importDefault(require("react"));
 // 'nw' - Northwest handle (top-left)
 // 'se' - Southeast handle (bottom-right)
 // 'ne' - Northeast handle (top-right)
-exports.resizeHandleAxesType = prop_types_1["default"].arrayOf(prop_types_1["default"].oneOf(["s", "w", "e", "n", "sw", "nw", "se", "ne"]));
+exports.rglResizeHandleAxesType = prop_types_1["default"].arrayOf(prop_types_1["default"].oneOf(["s", "w", "e", "n", "sw", "nw", "se", "ne"]));
 // Custom component for resize handles
-exports.resizeHandleType = prop_types_1["default"].oneOfType([prop_types_1["default"].node, prop_types_1["default"].func]);
+exports.rglResizeHandleType = prop_types_1["default"].oneOfType([prop_types_1["default"].node, prop_types_1["default"].func]);
 var RGLPropTypes = {
     //
     // Basic props
@@ -94,8 +94,8 @@ var RGLPropTypes = {
     // If true, an external element can trigger onDrop callback with a specific grid position as a parameter
     isDroppable: prop_types_1["default"].bool,
     // Resize handle options
-    resizeHandles: exports.resizeHandleAxesType,
-    resizeHandle: exports.resizeHandleType,
+    resizeHandles: exports.rglResizeHandleAxesType,
+    resizeHandle: exports.rglResizeHandleType,
     //
     // Callbacks
     //

@@ -1,19 +1,19 @@
-import * as React from "react";
 import PropTypes from "prop-types";
-import type { RGLGridProps } from "../RGLPropTypes";
+import * as React from "react";
+import type { RGLGridProps } from "../props/RGLPropTypes";
 declare type WPDefaultProps = {
     measureBeforeMount: boolean;
 };
 declare type WPState = {
     width: number;
 };
-declare type ComposedProps<Config> = Config & {
+declare type ComposedProps<Config extends RGLGridProps> = Config & {
     measureBeforeMount?: boolean;
     className?: string;
     style?: Object;
     width?: number;
 };
-export default function WidthProvideRGL<Config>(ComposedComponent: React.ComponentType<ComposedProps<RGLGridProps>>): {
+export declare function RGLWidthProvider(ComposedComponent: React.ComponentType<ComposedProps<RGLGridProps>>): {
     new (props: ComposedProps<RGLGridProps> | Readonly<ComposedProps<RGLGridProps>>): {
         state: WPState;
         elementRef: React.RefObject<HTMLDivElement>;
@@ -76,4 +76,4 @@ export default function WidthProvideRGL<Config>(ComposedComponent: React.Compone
     };
     contextType?: React.Context<any> | undefined;
 };
-export {};
+export default RGLWidthProvider;

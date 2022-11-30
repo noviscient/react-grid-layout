@@ -1,8 +1,12 @@
 "use strict";
 // @flow
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 exports.__esModule = true;
 exports.sortBreakpoints = exports.findOrGenerateResponsiveLayout = exports.getColsFromBreakpoint = exports.getBreakpointFromWidth = void 0;
-var coreUtils_1 = require("./coreUtils");
+var coreUtils_1 = __importDefault(require("./coreUtils"));
+var cloneLayout = coreUtils_1["default"].cloneLayout, compact = coreUtils_1["default"].compact, correctBounds = coreUtils_1["default"].correctBounds;
 /**
  * Given a width, find the highest breakpoint that matches is valid for it (width > breakpoint).
  *
@@ -54,7 +58,7 @@ exports.getColsFromBreakpoint = getColsFromBreakpoint;
 function findOrGenerateResponsiveLayout(layouts, breakpoints, breakpoint, lastBreakpoint, cols, compactType) {
     // If it already exists, just return it.
     if (layouts[breakpoint])
-        return (0, coreUtils_1.cloneLayout)(layouts[breakpoint]);
+        return cloneLayout(layouts[breakpoint]);
     // Find or generate the next layout
     var layout = layouts[lastBreakpoint];
     var breakpointsSorted = sortBreakpoints(breakpoints);
@@ -66,8 +70,8 @@ function findOrGenerateResponsiveLayout(layouts, breakpoints, breakpoint, lastBr
             break;
         }
     }
-    layout = (0, coreUtils_1.cloneLayout)(layout || []); // clone layout so we don't modify existing items
-    return (0, coreUtils_1.compact)((0, coreUtils_1.correctBounds)(layout, { cols: cols }), compactType, cols);
+    layout = cloneLayout(layout || []); // clone layout so we don't modify existing items
+    return compact(correctBounds(layout, { cols: cols }), compactType, cols);
 }
 exports.findOrGenerateResponsiveLayout = findOrGenerateResponsiveLayout;
 /**

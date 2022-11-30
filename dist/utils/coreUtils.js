@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.noop = exports.compactType = exports.validateLayout = exports.synchronizeLayoutWithChildren = exports.sortLayoutItemsByColRow = exports.sortLayoutItemsByRowCol = exports.sortLayoutItems = exports.setTopLeft = exports.setTransform = exports.perc = exports.moveElementAwayFromCollision = exports.moveElement = exports.getStatics = exports.getAllCollisions = exports.getFirstCollision = exports.getLayoutItem = exports.correctBounds = exports.compactItem = exports.compact = exports.collides = exports.fastPositionEqual = exports.childrenEqual = exports.cloneLayoutItem = exports.withLayoutItem = exports.modifyLayout = exports.cloneLayout = exports.bottom = void 0;
 var isEqual_1 = __importDefault(require("lodash/isEqual"));
 var react_1 = __importDefault(require("react"));
 var isProduction = process.env.NODE_ENV === "production";
@@ -34,7 +33,6 @@ function bottom(layout) {
     }
     return max;
 }
-exports.bottom = bottom;
 function cloneLayout(layout) {
     var newLayout = Array(layout.length);
     for (var i = 0, len = layout.length; i < len; i++) {
@@ -42,7 +40,6 @@ function cloneLayout(layout) {
     }
     return newLayout;
 }
-exports.cloneLayout = cloneLayout;
 // Modify a layoutItem inside a layout. Returns a new Layout,
 // does not mutate. Carries over all other LayoutItems unmodified.
 function modifyLayout(layout, layoutItem) {
@@ -57,7 +54,6 @@ function modifyLayout(layout, layoutItem) {
     }
     return newLayout;
 }
-exports.modifyLayout = modifyLayout;
 // Function to be called to modify a layout item.
 // Does defensive clones to ensure the layout is not modified.
 function withLayoutItem(layout, itemKey, cb) {
@@ -69,7 +65,6 @@ function withLayoutItem(layout, itemKey, cb) {
     layout = modifyLayout(layout, item);
     return [layout, item];
 }
-exports.withLayoutItem = withLayoutItem;
 // Fast path to cloning, since this is monomorphic
 function cloneLayoutItem(layoutItem) {
     return {
@@ -91,7 +86,6 @@ function cloneLayoutItem(layoutItem) {
         isBounded: layoutItem.isBounded
     };
 }
-exports.cloneLayoutItem = cloneLayoutItem;
 /**
  * Comparing React `children` is a bit difficult. This is a good way to compare them.
  * This will catch differences in keys, order, and length.
@@ -99,7 +93,6 @@ exports.cloneLayoutItem = cloneLayoutItem;
 function childrenEqual(a, b) {
     return (0, isEqual_1["default"])(react_1["default"].Children.map(a, function (c) { return c === null || c === void 0 ? void 0 : c.key; }), react_1["default"].Children.map(b, function (c) { return c === null || c === void 0 ? void 0 : c.key; }));
 }
-exports.childrenEqual = childrenEqual;
 // Like the above, but a lot simpler.
 function fastPositionEqual(a, b) {
     return (a.left === b.left &&
@@ -107,7 +100,6 @@ function fastPositionEqual(a, b) {
         a.width === b.width &&
         a.height === b.height);
 }
-exports.fastPositionEqual = fastPositionEqual;
 /**
  * Given two layoutitems, check if they collide.
  */
@@ -124,7 +116,6 @@ function collides(l1, l2) {
         return false; // l1 is below l2
     return true; // boxes overlap
 }
-exports.collides = collides;
 /**
  * Given a layout, compact it. This involves going down each y coordinate and removing gaps
  * between items.
@@ -159,7 +150,6 @@ function compact(layout, compactType, cols) {
     }
     return out;
 }
-exports.compact = compact;
 var heightWidth = { x: "w", y: "h" };
 /**
  * Before moving item down, it will check if the movement will cause collisions and move those items down before.
@@ -233,7 +223,6 @@ function compactItem(compareWith, l, compactType, cols, fullLayout) {
     l.x = Math.max(l.x, 0);
     return l;
 }
-exports.compactItem = compactItem;
 /**
  * Given a layout, make sure all elements fit within its bounds.
  *
@@ -266,13 +255,12 @@ function correctBounds(layout, bounds) {
     }
     return layout;
 }
-exports.correctBounds = correctBounds;
 /**
  * Get a layout item by ID. Used so we can override later on if necessary.
  *
  * @param  {Array}  layout Layout array.
  * @param  {String} id     ID
- * @return {LayoutItem}    Item at ID.
+ * @return {RGLLayoutItem}    Item at ID.
  */
 function getLayoutItem(layout, id) {
     for (var i = 0, len = layout.length; i < len; i++) {
@@ -281,7 +269,6 @@ function getLayoutItem(layout, id) {
     }
     return undefined;
 }
-exports.getLayoutItem = getLayoutItem;
 /**
  * Returns the first item this layout collides with.
  * It doesn't appear to matter which order we approach this from, although
@@ -297,11 +284,9 @@ function getFirstCollision(layout, layoutItem) {
     }
     return undefined;
 }
-exports.getFirstCollision = getFirstCollision;
 function getAllCollisions(layout, layoutItem) {
     return layout.filter(function (l) { return collides(l, layoutItem); });
 }
-exports.getAllCollisions = getAllCollisions;
 /**
  * Get all static elements.
  * @param  {Array} layout Array of layout objects.
@@ -310,14 +295,13 @@ exports.getAllCollisions = getAllCollisions;
 function getStatics(layout) {
     return layout.filter(function (l) { return l.static; });
 }
-exports.getStatics = getStatics;
 /**
  * Move an element. Responsible for doing cascading movements of other elements.
  *
  * Modifies layout items.
  *
  * @param  {Array}      layout            Full layout to modify.
- * @param  {LayoutItem} l                 element to move.
+ * @param  {RGLLayoutItem} l                 element to move.
  * @param  {Number}     [x]               X position in grid units.
  * @param  {Number}     [y]               Y position in grid units.
  */
@@ -387,14 +371,13 @@ function moveElement(layout, l, x, y, isUserAction, preventCollision, compactTyp
     }
     return layout;
 }
-exports.moveElement = moveElement;
 /**
  * This is where the magic needs to happen - given a collision, move an element away from the collision.
  * We attempt to move it up if there's room, otherwise it goes below.
  *
  * @param  {Array} layout            Full layout to modify.
- * @param  {LayoutItem} collidesWith Layout item we're colliding with.
- * @param  {LayoutItem} itemToMove   Layout item we're moving.
+ * @param  {RGLLayoutItem} collidesWith Layout item we're colliding with.
+ * @param  {RGLLayoutItem} itemToMove   Layout item we're moving.
  */
 function moveElementAwayFromCollision(layout, collidesWith, itemToMove, isUserAction, compactType, cols) {
     var compactH = compactType === "horizontal";
@@ -423,7 +406,6 @@ function moveElementAwayFromCollision(layout, collidesWith, itemToMove, isUserAc
     }
     return moveElement(layout, itemToMove, compactH ? itemToMove.x + 1 : undefined, compactV ? itemToMove.y + 1 : undefined, isUserAction, preventCollision, compactType, cols, undefined);
 }
-exports.moveElementAwayFromCollision = moveElementAwayFromCollision;
 /**
  * Helper to convert a number to a percentage string.
  *
@@ -433,7 +415,6 @@ exports.moveElementAwayFromCollision = moveElementAwayFromCollision;
 function perc(num) {
     return num * 100 + "%";
 }
-exports.perc = perc;
 function setTransform(_a) {
     var top = _a.top, left = _a.left, width = _a.width, height = _a.height;
     // Replace unitless items with px
@@ -449,7 +430,6 @@ function setTransform(_a) {
         position: "absolute"
     };
 }
-exports.setTransform = setTransform;
 function setTopLeft(_a) {
     var top = _a.top, left = _a.left, width = _a.width, height = _a.height;
     return {
@@ -460,7 +440,6 @@ function setTopLeft(_a) {
         position: "absolute"
     };
 }
-exports.setTopLeft = setTopLeft;
 /**
  * Get layout items sorted from top left to right and down.
  *
@@ -475,7 +454,6 @@ function sortLayoutItems(layout, compactType) {
     else
         return layout;
 }
-exports.sortLayoutItems = sortLayoutItems;
 /**
  * Sort layout items by row ascending and column ascending.
  *
@@ -494,7 +472,6 @@ function sortLayoutItemsByRowCol(layout) {
         return -1;
     });
 }
-exports.sortLayoutItemsByRowCol = sortLayoutItemsByRowCol;
 /**
  * Sort layout items by column ascending then row ascending.
  *
@@ -508,7 +485,6 @@ function sortLayoutItemsByColRow(layout) {
         return -1;
     });
 }
-exports.sortLayoutItemsByColRow = sortLayoutItemsByColRow;
 /**
  * Generate a layout using the initialLayout and children as a template.
  * Missing entries will be added, extraneous ones will be truncated.
@@ -566,7 +542,6 @@ function synchronizeLayoutWithChildren(initialLayout, children, cols, compactTyp
         ? correctedLayout
         : compact(correctedLayout, compactType !== null && compactType !== void 0 ? compactType : 'vertical', cols);
 }
-exports.synchronizeLayoutWithChildren = synchronizeLayoutWithChildren;
 /**
  * Validate a layout. Throws errors.
  *
@@ -594,13 +569,11 @@ function validateLayout(layout, contextName) {
         }
     }
 }
-exports.validateLayout = validateLayout;
 // Legacy support for verticalCompact: false
 function compactType(props) {
     var _a = props || {}, verticalCompact = _a.verticalCompact, compactType = _a.compactType;
     return verticalCompact === false ? null : compactType;
 }
-exports.compactType = compactType;
 function log() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
@@ -612,4 +585,36 @@ function log() {
     console.log.apply(console, args);
 }
 var noop = function () { };
-exports.noop = noop;
+var rglCoreUtils = {
+    noop: noop,
+    log: log,
+    compactType: compactType,
+    validateLayout: validateLayout,
+    synchronizeLayoutWithChildren: synchronizeLayoutWithChildren,
+    sortLayoutItemsByRowCol: sortLayoutItemsByRowCol,
+    sortLayoutItemsByColRow: sortLayoutItemsByColRow,
+    sortLayoutItems: sortLayoutItems,
+    setTopLeft: setTopLeft,
+    setTransform: setTransform,
+    perc: perc,
+    moveElement: moveElement,
+    moveElementAwayFromCollision: moveElementAwayFromCollision,
+    getStatics: getStatics,
+    bottom: bottom,
+    cloneLayout: cloneLayout,
+    modifyLayout: modifyLayout,
+    withLayoutItem: withLayoutItem,
+    cloneLayoutItem: cloneLayoutItem,
+    childrenEqual: childrenEqual,
+    fastPositionEqual: fastPositionEqual,
+    collides: collides,
+    compact: compact,
+    heightWidth: heightWidth,
+    resolveCompactionCollision: resolveCompactionCollision,
+    compactItem: compactItem,
+    correctBounds: correctBounds,
+    getLayoutItem: getLayoutItem,
+    getFirstCollision: getFirstCollision,
+    getAllCollisions: getAllCollisions
+};
+exports["default"] = rglCoreUtils;

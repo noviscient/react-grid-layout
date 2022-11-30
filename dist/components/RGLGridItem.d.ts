@@ -1,10 +1,10 @@
 import type { ReactElement, ReactNode, SyntheticEvent } from "react";
 import React from "react";
 import { DraggableEvent } from "react-draggable";
-import { PositionParams } from '../utils/calculateUtils';
-import type { Position, ReactDraggableCallbackData } from '../RGLExtraTypes';
-import { RGLGridItemProps, RGLGridItemState } from '../RGLGridItemPropTypes';
-import type { ReactRef } from '../RGLPropTypes';
+import type { RGLPosition, RGLReactDraggableCallbackData } from '../props/RGLExtraTypes';
+import { RGLGridItemProps, RGLGridItemState } from '../props/RGLGridItemPropTypes';
+import type { RGLReactRef } from '../props/RGLPropTypes';
+import { RGLPositionParams } from '../utils/calculateUtils';
 declare type State = RGLGridItemState;
 declare type Props = RGLGridItemProps;
 declare type DefaultProps = {
@@ -20,7 +20,7 @@ declare type DefaultProps = {
 /**
  * An individual item within a ReactGridLayout.
  */
-export default class GridItem extends React.Component<RGLGridItemProps, State> {
+export declare class RGLGridItem extends React.Component<RGLGridItemProps, State> {
     static propTypes: {
         children: import("prop-types").Requireable<import("prop-types").ReactElementLike>;
         cols: import("prop-types").Validator<number>;
@@ -38,7 +38,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
         minH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
         maxH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
         i: import("prop-types").Validator<string>;
-        resizeHandles: import("prop-types").Requireable<(import("../RGLPropTypes").ResizeHandleAxis | null | undefined)[]>;
+        resizeHandles: import("prop-types").Requireable<(import("../props/RGLPropTypes").RGLResizeHandleAxis | null | undefined)[]>;
         resizeHandle: import("prop-types").Requireable<string | number | boolean | import("prop-types").ReactElementLike | import("prop-types").ReactNodeArray | ((...args: any[]) => any)>;
         onDragStop: import("prop-types").Requireable<(...args: any[]) => any>;
         onDragStart: import("prop-types").Requireable<(...args: any[]) => any>;
@@ -63,12 +63,12 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
     };
     static defaultProps: DefaultProps;
     state: State;
-    elementRef: ReactRef<HTMLDivElement>;
+    elementRef: RGLReactRef<HTMLDivElement>;
     shouldComponentUpdate(nextProps: RGLGridItemProps, nextState: State): boolean;
     componentDidMount(): void;
     componentDidUpdate(prevProps: Props): void;
     moveDroppingItem(prevProps: Partial<Props>): void;
-    getPositionParams(props?: Props): PositionParams;
+    getPositionParams(props?: Props): RGLPositionParams;
     /**
      * This is where we set the grid item's absolute placement. It gets a little tricky because we want to do it
      * well when server rendering, and the only way to do that properly is to use percentage width/left because
@@ -79,7 +79,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      * @param  {Object} pos Position object with width, height, left, top.
      * @return {Object}     Style object.
      */
-    createStyle(pos: Position): {
+    createStyle(pos: RGLPosition): {
         [key: string]: string | undefined;
     };
     /**
@@ -94,7 +94,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      * @param  {Object} position  Position object (pixel values)
      * @return {Element}          Child wrapped in Resizable.
      */
-    mixinResizable(child: ReactElement<any>, position: Position, isResizable: boolean): ReactElement<any>;
+    mixinResizable(child: ReactElement<any>, position: RGLPosition, isResizable: boolean): ReactElement<any>;
     onDragStart: (e: DraggableEvent | SyntheticEvent, { node }: {
         node: HTMLElement;
     }) => void;
@@ -103,11 +103,11 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      * @param  {Event}  e             event data
      * @param  {Object} callbackData  an object with node, delta and position information
      */
-    onDrag: (e: SyntheticEvent | DraggableEvent, { node, deltaX, deltaY }: ReactDraggableCallbackData) => void;
+    onDrag: (e: SyntheticEvent | DraggableEvent, { node, deltaX, deltaY }: RGLReactDraggableCallbackData) => void;
     /**
      * onDragStop event handler
      */
-    onDragStop: (e: SyntheticEvent | DraggableEvent, { node }: ReactDraggableCallbackData) => void;
+    onDragStop: (e: SyntheticEvent | DraggableEvent, { node }: RGLReactDraggableCallbackData) => void;
     /**
      * onResizeStop event handler
      * @param  {Event}  e             event data
@@ -115,7 +115,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      */
     onResizeStop: (e: SyntheticEvent, callbackData: {
         node: HTMLElement;
-        size: Pick<Position, 'width' | 'height'>;
+        size: Pick<RGLPosition, 'width' | 'height'>;
     }) => void;
     /**
      * onResizeStart event handler
@@ -124,7 +124,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      */
     onResizeStart: (e: SyntheticEvent, callbackData: {
         node: HTMLElement;
-        size: Pick<Position, 'width' | 'height'>;
+        size: Pick<RGLPosition, 'width' | 'height'>;
     }) => void;
     /**
      * onResize event handler
@@ -133,7 +133,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      */
     onResize: (e: SyntheticEvent, callbackData: {
         node: HTMLElement;
-        size: Pick<Position, 'width' | 'height'>;
+        size: Pick<RGLPosition, 'width' | 'height'>;
     }) => void;
     /**
      * Wrapper around drag events to provide more useful data.
@@ -145,8 +145,8 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
      */
     onResizeHandler(e: React.SyntheticEvent, { node, size }: {
         node: HTMLElement;
-        size: Pick<Position, 'width' | 'height'>;
+        size: Pick<RGLPosition, 'width' | 'height'>;
     }, handlerName: 'onResizeStart' | 'onResizeStop' | 'onResize'): void;
     render(): ReactNode;
 }
-export {};
+export default RGLGridItem;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLayout, OnLayoutChangeCallback, BreakpointWidthsMap, DefaultBreakpoints } from '../utils/responsiveUtils';
-import ReactGridLayout from './ReactGridLayout';
-import { Layout } from '../RGLExtraTypes';
-import { RGLGridProps } from '../RGLPropTypes';
+import ReactGridLayout from './RGLGrid';
+import { RGLLayoutItemList } from '../props/RGLExtraTypes';
+import { RGLGridProps } from '../props/RGLPropTypes';
 declare type State<B extends string = DefaultBreakpoints> = {
-    layout: Layout;
+    layout: RGLLayoutItemList;
     breakpoint: B;
     cols: number;
     layouts?: ResponsiveLayout<B>;
@@ -37,7 +37,7 @@ declare type ResponsiveContainerPaddingSpec<B extends string = DefaultBreakpoint
     };
 };
 declare type DefaultProps<B extends string = DefaultBreakpoints> = Pick<Props, 'allowOverlap' | 'breakpoints' | 'layouts' | 'margin' | 'onBreakpointChange' | 'onLayoutChange' | 'onWidthChange'> & ResponsiveColsSpec<B> & ResponsiveContainerPaddingSpec<B>;
-export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpoints> extends React.Component<Props<B>, State<B>> {
+export declare class RGLResponsiveGrid<B extends string = DefaultBreakpoints> extends React.Component<Props<B>, State<B>> {
     static propTypes: {
         breakpoint: PropTypes.Requireable<string>;
         breakpoints: PropTypes.Requireable<object>;
@@ -56,7 +56,7 @@ export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpo
     generateInitialState(): State<B>;
     static getDerivedStateFromProps<B extends string = DefaultBreakpoints>(nextProps: Props<B>, prevState: State<B>): Partial<State> | null;
     componentDidUpdate(prevProps: Props<B>): void;
-    onLayoutChange: (layout: Layout) => void;
+    onLayoutChange: (layout: RGLLayoutItemList) => void;
     /**
      * When the width changes work through breakpoints and reset state with the new width & breakpoint.
      * Width changes are necessary to figure out the widget widths.
@@ -64,4 +64,4 @@ export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpo
     onWidthChange(prevProps: Props<B>): void;
     render(): React.ReactElement<typeof ReactGridLayout>;
 }
-export {};
+export default RGLResponsiveGrid;

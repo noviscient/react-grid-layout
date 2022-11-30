@@ -1,7 +1,7 @@
-import * as React from "react"
-import PropTypes from "prop-types"
 import clsx from "clsx"
-import type { RGLGridProps, ReactRef } from "../RGLPropTypes"
+import PropTypes from "prop-types"
+import * as React from "react"
+import type { RGLGridProps } from "../props/RGLPropTypes"
 
 type WPDefaultProps = {
 	measureBeforeMount: boolean
@@ -17,7 +17,7 @@ type WPState = {
 	width: number
 }
 
-type ComposedProps<Config> = Config & {
+type ComposedProps<Config extends RGLGridProps> = Config & {
 	measureBeforeMount?: boolean,
 	className?: string,
 	style?: Object,
@@ -32,7 +32,7 @@ const layoutClassName = "react-grid-layout"
  * The Flow type is pretty janky here. I can't just spread `WPProps` into this returned object - I wish I could - but it triggers
  * a flow bug of some sort that causes it to stop typechecking.
  */
-export default function WidthProvideRGL<Config> (
+export function RGLWidthProvider (
 	ComposedComponent: React.ComponentType<ComposedProps<RGLGridProps>>
 ) {
 	return class WidthProvider extends React.Component<
@@ -81,6 +81,7 @@ export default function WidthProvideRGL<Config> (
 		};
 
 		render () {
+			this.props
 			const { measureBeforeMount, ...rest } = this.props
 			if (measureBeforeMount && !this.mounted) {
 				return (
@@ -103,3 +104,4 @@ export default function WidthProvideRGL<Config> (
 		}
 	}
 }
+export default RGLWidthProvider

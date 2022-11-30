@@ -1,6 +1,6 @@
 import isEqual from 'lodash/isEqual'
 import React, { ReactChildren } from 'react'
-import { CompactType, Layout, LayoutItem, Position } from '../RGLExtraTypes'
+import { RGLCompactType, RGLLayoutItemList, RGLLayoutItem, RGLPosition } from '../props/RGLExtraTypes'
 
 const isProduction = process.env.NODE_ENV === "production"
 const DEBUG = false
@@ -11,7 +11,7 @@ const DEBUG = false
  * @param  {Array} layout Layout array.
  * @return {Number}       Bottom coordinate.
  */
-export function bottom (layout: Layout): number {
+function bottom (layout: RGLLayoutItemList): number {
 	let max = 0,
 		bottomY
 	for (let i = 0, len = layout.length; i < len; i++) {
@@ -21,7 +21,7 @@ export function bottom (layout: Layout): number {
 	return max
 }
 
-export function cloneLayout (layout: Layout): Layout {
+function cloneLayout (layout: RGLLayoutItemList): RGLLayoutItemList {
 	const newLayout = Array(layout.length)
 	for (let i = 0, len = layout.length; i < len; i++) {
 		newLayout[i] = cloneLayoutItem(layout[i])
@@ -31,7 +31,7 @@ export function cloneLayout (layout: Layout): Layout {
 
 // Modify a layoutItem inside a layout. Returns a new Layout,
 // does not mutate. Carries over all other LayoutItems unmodified.
-export function modifyLayout (layout: Layout, layoutItem: LayoutItem): Layout {
+function modifyLayout (layout: RGLLayoutItemList, layoutItem: RGLLayoutItem): RGLLayoutItemList {
 	const newLayout = Array(layout.length)
 	for (let i = 0, len = layout.length; i < len; i++) {
 		if (layoutItem.i === layout[i].i) {
@@ -45,11 +45,11 @@ export function modifyLayout (layout: Layout, layoutItem: LayoutItem): Layout {
 
 // Function to be called to modify a layout item.
 // Does defensive clones to ensure the layout is not modified.
-export function withLayoutItem (
-	layout: Layout,
+function withLayoutItem (
+	layout: RGLLayoutItemList,
 	itemKey: string,
-	cb: (li: LayoutItem) => LayoutItem
-): [Layout, LayoutItem | null] {
+	cb: (li: RGLLayoutItem) => RGLLayoutItem
+): [RGLLayoutItemList, RGLLayoutItem | null] {
 	let item = getLayoutItem(layout, itemKey)
 	if (!item) return [layout, null]
 	item = cb(cloneLayoutItem(item)) // defensive clone then modify
@@ -59,7 +59,7 @@ export function withLayoutItem (
 }
 
 // Fast path to cloning, since this is monomorphic
-export function cloneLayoutItem (layoutItem: LayoutItem): LayoutItem {
+function cloneLayoutItem (layoutItem: RGLLayoutItem): RGLLayoutItem {
 	return {
 		w: layoutItem.w,
 		h: layoutItem.h,
@@ -84,7 +84,7 @@ export function cloneLayoutItem (layoutItem: LayoutItem): LayoutItem {
  * Comparing React `children` is a bit difficult. This is a good way to compare them.
  * This will catch differences in keys, order, and length.
  */
-export function childrenEqual (a: React.ReactElement[], b: React.ReactElement[]): boolean {
+function childrenEqual (a: React.ReactElement[], b: React.ReactElement[]): boolean {
 	return isEqual(
 		React.Children.map(a, c => c?.key),
 		React.Children.map(b, c => c?.key)
@@ -92,7 +92,7 @@ export function childrenEqual (a: React.ReactElement[], b: React.ReactElement[])
 }
 
 // Like the above, but a lot simpler.
-export function fastPositionEqual (a: Position, b: Position): boolean {
+function fastPositionEqual (a: RGLPosition, b: RGLPosition): boolean {
 	return (
 		a.left === b.left &&
 		a.top === b.top &&
@@ -104,7 +104,7 @@ export function fastPositionEqual (a: Position, b: Position): boolean {
 /**
  * Given two layoutitems, check if they collide.
  */
-export function collides (l1: LayoutItem, l2: LayoutItem): boolean {
+function collides (l1: RGLLayoutItem, l2: RGLLayoutItem): boolean {
 	if (l1.i === l2.i) return false // same element
 	if (l1.x + l1.w <= l2.x) return false // l1 is left of l2
 	if (l1.x >= l2.x + l2.w) return false // l1 is right of l2
@@ -124,11 +124,11 @@ export function collides (l1: LayoutItem, l2: LayoutItem): boolean {
  *   vertically.
  * @return {Array}       Compacted Layout.
  */
-export function compact (
-	layout: Layout,
-	compactType: CompactType,
+function compact (
+	layout: RGLLayoutItemList,
+	compactType: RGLCompactType,
 	cols: number
-): Layout {
+): RGLLayoutItemList {
 	// Statics go in the compareWith array right away so items flow around them.
 	const compareWith = getStatics(layout)
 	// We go through the items by row and column.
@@ -163,8 +163,8 @@ const heightWidth = { x: "w", y: "h" } as const
  * Before moving item down, it will check if the movement will cause collisions and move those items down before.
  */
 function resolveCompactionCollision (
-	layout: Layout,
-	item: LayoutItem,
+	layout: RGLLayoutItemList,
+	item: RGLLayoutItem,
 	moveToCoord: number,
 	axis: "x" | "y"
 ) {
@@ -205,13 +205,13 @@ function resolveCompactionCollision (
  * Modifies item.
  *
  */
-export function compactItem (
-	compareWith: Layout,
-	l: LayoutItem,
-	compactType: CompactType,
+function compactItem (
+	compareWith: RGLLayoutItemList,
+	l: RGLLayoutItem,
+	compactType: RGLCompactType,
 	cols: number,
-	fullLayout: Layout
-): LayoutItem {
+	fullLayout: RGLLayoutItemList
+): RGLLayoutItem {
 	const compactV = compactType === "vertical"
 	const compactH = compactType === "horizontal"
 	if (compactV) {
@@ -260,10 +260,10 @@ export function compactItem (
  * @param  {Array} layout Layout array.
  * @param  {Number} bounds Number of columns.
  */
-export function correctBounds (
-	layout: Layout,
+function correctBounds (
+	layout: RGLLayoutItemList,
 	bounds: { cols: number }
-): Layout {
+): RGLLayoutItemList {
 	const collidesWith = getStatics(layout)
 	for (let i = 0, len = layout.length; i < len; i++) {
 		const l = layout[i]
@@ -291,9 +291,9 @@ export function correctBounds (
  *
  * @param  {Array}  layout Layout array.
  * @param  {String} id     ID
- * @return {LayoutItem}    Item at ID.
+ * @return {RGLLayoutItem}    Item at ID.
  */
-export function getLayoutItem (layout: Layout, id: string): LayoutItem | undefined {
+function getLayoutItem (layout: RGLLayoutItemList, id: string): RGLLayoutItem | undefined {
 	for (let i = 0, len = layout.length; i < len; i++) {
 		if (layout[i].i === id) return layout[i]
 	}
@@ -308,20 +308,20 @@ export function getLayoutItem (layout: Layout, id: string): LayoutItem | undefin
  * @param  {Object} layoutItem Layout item.
  * @return {Object|undefined}  A colliding layout item, or undefined.
  */
-export function getFirstCollision (
-	layout: Layout,
-	layoutItem: LayoutItem
-): LayoutItem | undefined {
+function getFirstCollision (
+	layout: RGLLayoutItemList,
+	layoutItem: RGLLayoutItem
+): RGLLayoutItem | undefined {
 	for (let i = 0, len = layout.length; i < len; i++) {
 		if (collides(layout[i], layoutItem)) return layout[i]
 	}
 	return undefined
 }
 
-export function getAllCollisions (
-	layout: Layout,
-	layoutItem: LayoutItem
-): Array<LayoutItem> {
+function getAllCollisions (
+	layout: RGLLayoutItemList,
+	layoutItem: RGLLayoutItem
+): Array<RGLLayoutItem> {
 	return layout.filter(l => collides(l, layoutItem))
 }
 
@@ -330,7 +330,7 @@ export function getAllCollisions (
  * @param  {Array} layout Array of layout objects.
  * @return {Array}        Array of static layout items..
  */
-export function getStatics (layout: Layout): Array<LayoutItem> {
+function getStatics (layout: RGLLayoutItemList): Array<RGLLayoutItem> {
 	return layout.filter(l => l.static)
 }
 
@@ -340,21 +340,21 @@ export function getStatics (layout: Layout): Array<LayoutItem> {
  * Modifies layout items.
  *
  * @param  {Array}      layout            Full layout to modify.
- * @param  {LayoutItem} l                 element to move.
+ * @param  {RGLLayoutItem} l                 element to move.
  * @param  {Number}     [x]               X position in grid units.
  * @param  {Number}     [y]               Y position in grid units.
  */
-export function moveElement (
-	layout: Layout,
-	l: LayoutItem,
+function moveElement (
+	layout: RGLLayoutItemList,
+	l: RGLLayoutItem,
 	x: undefined | number,
 	y: undefined | number,
 	isUserAction: undefined | boolean,
 	preventCollision: undefined | boolean,
-	compactType: CompactType,
+	compactType: RGLCompactType,
 	cols: number,
 	allowOverlap: undefined | boolean
-): Layout {
+): RGLLayoutItemList {
 	// If this is static and not explicitly enabled as draggable,
 	// no move is possible, so we can short-circuit this immediately.
 	if (l.static && l.isDraggable !== true) return layout
@@ -446,17 +446,17 @@ export function moveElement (
  * We attempt to move it up if there's room, otherwise it goes below.
  *
  * @param  {Array} layout            Full layout to modify.
- * @param  {LayoutItem} collidesWith Layout item we're colliding with.
- * @param  {LayoutItem} itemToMove   Layout item we're moving.
+ * @param  {RGLLayoutItem} collidesWith Layout item we're colliding with.
+ * @param  {RGLLayoutItem} itemToMove   Layout item we're moving.
  */
-export function moveElementAwayFromCollision (
-	layout: Layout,
-	collidesWith: LayoutItem,
-	itemToMove: LayoutItem,
+function moveElementAwayFromCollision (
+	layout: RGLLayoutItemList,
+	collidesWith: RGLLayoutItem,
+	itemToMove: RGLLayoutItem,
 	isUserAction: boolean | undefined,
-	compactType: CompactType,
+	compactType: RGLCompactType,
 	cols: number
-): Layout {
+): RGLLayoutItemList {
 	const compactH = compactType === "horizontal"
 	// Compact vertically if not set to horizontal
 	const compactV = compactType !== "horizontal"
@@ -470,7 +470,7 @@ export function moveElementAwayFromCollision (
 		isUserAction = false
 
 		// Make a mock item so we don't modify the item here, only modify in moveElement.
-		const fakeItem: LayoutItem = {
+		const fakeItem: RGLLayoutItem = {
 			x: compactH ? Math.max(collidesWith.x - itemToMove.w, 0) : itemToMove.x,
 			y: compactV ? Math.max(collidesWith.y - itemToMove.h, 0) : itemToMove.y,
 			w: itemToMove.w,
@@ -516,11 +516,11 @@ export function moveElementAwayFromCollision (
  * @param  {Number} num Any number
  * @return {String}     That number as a percentage.
  */
-export function perc (num: number): string {
+function perc (num: number): string {
 	return num * 100 + "%"
 }
 
-export function setTransform ({ top, left, width, height }: Position) {
+function setTransform ({ top, left, width, height }: RGLPosition) {
 	// Replace unitless items with px
 	const translate = `translate(${ left }px,${ top }px)`
 	return {
@@ -535,7 +535,7 @@ export function setTransform ({ top, left, width, height }: Position) {
 	}
 }
 
-export function setTopLeft ({ top, left, width, height }: Position) {
+function setTopLeft ({ top, left, width, height }: RGLPosition) {
 	return {
 		top: `${ top }px`,
 		left: `${ left }px`,
@@ -551,10 +551,10 @@ export function setTopLeft ({ top, left, width, height }: Position) {
  * @return {Array} Array of layout objects.
  * @return {Array}        Layout, sorted static items first.
  */
-export function sortLayoutItems (
-	layout: Layout,
-	compactType: CompactType
-): Layout {
+function sortLayoutItems (
+	layout: RGLLayoutItemList,
+	compactType: RGLCompactType
+): RGLLayoutItemList {
 	if (compactType === "horizontal") return sortLayoutItemsByColRow(layout)
 	if (compactType === "vertical") return sortLayoutItemsByRowCol(layout)
 	else return layout
@@ -565,7 +565,7 @@ export function sortLayoutItems (
  *
  * Does not modify Layout.
  */
-export function sortLayoutItemsByRowCol (layout: Layout): Layout {
+function sortLayoutItemsByRowCol (layout: RGLLayoutItemList): RGLLayoutItemList {
 	// Slice to clone array as sort modifies
 	return layout.slice(0).sort(function (a, b) {
 		if (a.y > b.y || (a.y === b.y && a.x > b.x)) {
@@ -583,7 +583,7 @@ export function sortLayoutItemsByRowCol (layout: Layout): Layout {
  *
  * Does not modify Layout.
  */
-export function sortLayoutItemsByColRow (layout: Layout): Layout {
+function sortLayoutItemsByColRow (layout: RGLLayoutItemList): RGLLayoutItemList {
 	return layout.slice(0).sort(function (a, b) {
 		if (a.x > b.x || (a.x === b.x && a.y > b.y)) {
 			return 1
@@ -603,17 +603,17 @@ export function sortLayoutItemsByColRow (layout: Layout): Layout {
  * @param  {?String} compact      Compaction option.
  * @return {Array}                Working layout.
  */
-export function synchronizeLayoutWithChildren (
-	initialLayout: Layout,
+function synchronizeLayoutWithChildren (
+	initialLayout: RGLLayoutItemList,
 	children: React.ReactElement[],
 	cols: number,
-	compactType: CompactType | null,
+	compactType: RGLCompactType | null,
 	allowOverlap: boolean | undefined
-): Layout {
+): RGLLayoutItemList {
 	initialLayout = initialLayout || []
 
 	// Generate one layout item per child.
-	const layout: LayoutItem[] = []
+	const layout: RGLLayoutItem[] = []
 	React.Children.forEach(children, (child: React.ReactElement<any>) => {
 		// Child may not exist
 		if (child?.key == null) return
@@ -668,8 +668,8 @@ export function synchronizeLayoutWithChildren (
  * @param  {String} [contextName] Context name for errors.
  * @throw  {Error}                Validation error.
  */
-export function validateLayout (
-	layout: Layout,
+function validateLayout (
+	layout: RGLLayoutItemList,
 	contextName: string = "Layout"
 ): void {
 	const subProps = ["x", "y", "w", "h"] as const
@@ -694,9 +694,9 @@ export function validateLayout (
 }
 
 // Legacy support for verticalCompact: false
-export function compactType (
-	props?: { verticalCompact: boolean, compactType: CompactType | null }
-): CompactType | null {
+function compactType (
+	props?: { verticalCompact: boolean, compactType: RGLCompactType | null }
+): RGLCompactType | null {
 	const { verticalCompact, compactType } = props || {}
 	return verticalCompact === false ? null : compactType
 }
@@ -707,4 +707,38 @@ function log (...args: any[]) {
 	console.log(...args)
 }
 
-export const noop = () => { }
+const noop = () => { }
+
+const rglCoreUtils = {
+	noop,
+	log,
+	compactType,
+	validateLayout,
+	synchronizeLayoutWithChildren,
+	sortLayoutItemsByRowCol,
+	sortLayoutItemsByColRow,
+	sortLayoutItems,
+	setTopLeft,
+	setTransform,
+	perc,
+	moveElement,
+	moveElementAwayFromCollision,
+	getStatics,
+	bottom,
+	cloneLayout,
+	modifyLayout,
+	withLayoutItem,
+	cloneLayoutItem,
+	childrenEqual,
+	fastPositionEqual,
+	collides,
+	compact,
+	heightWidth,
+	resolveCompactionCollision,
+	compactItem,
+	correctBounds,
+	getLayoutItem,
+	getFirstCollision,
+	getAllCollisions
+}
+export default rglCoreUtils

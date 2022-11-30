@@ -52,8 +52,8 @@ var RGLGridItemPropTypes = {
     // ID is nice to have for callbacks
     i: prop_types_1["default"].string.isRequired,
     // Resize handle options
-    resizeHandles: RGLPropTypes_1.resizeHandleAxesType,
-    resizeHandle: RGLPropTypes_1.resizeHandleType,
+    resizeHandles: RGLPropTypes_1.rglResizeHandleAxesType,
+    resizeHandle: RGLPropTypes_1.rglResizeHandleType,
     // Functions
     onDragStop: prop_types_1["default"].func,
     onDragStart: prop_types_1["default"].func,

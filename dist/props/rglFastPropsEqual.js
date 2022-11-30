@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-exports.fastRGLPropsEqual = void 0;
+exports.rglFastGridPropsEqual = void 0;
 var RGLPropTypes_1 = __importDefault(require("./RGLPropTypes"));
 var isEqual_1 = __importDefault(require("lodash/isEqual"));
 var propKeys = Object.keys(RGLPropTypes_1["default"]);
 propKeys.splice(propKeys.indexOf('children'), 1);
-var fastRGLPropsEqual = function (a, b) {
+var rglFastGridPropsEqual = function (a, b) {
     var _a, _b, _c, _d, _e, _f;
     return a.allowOverlap === b.allowOverlap &&
         a.autoSize === b.autoSize &&
@@ -48,4 +48,4 @@ var fastRGLPropsEqual = function (a, b) {
         a.verticalCompact === b.verticalCompact &&
         a.width === b.width;
 };
-exports.fastRGLPropsEqual = fastRGLPropsEqual;
+exports.rglFastGridPropsEqual = rglFastGridPropsEqual;

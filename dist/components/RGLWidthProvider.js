@@ -59,9 +59,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
-var React = __importStar(require("react"));
-var prop_types_1 = __importDefault(require("prop-types"));
+exports.RGLWidthProvider = void 0;
 var clsx_1 = __importDefault(require("clsx"));
+var prop_types_1 = __importDefault(require("prop-types"));
+var React = __importStar(require("react"));
 var layoutClassName = "react-grid-layout";
 /*
  * A simple HOC that provides facility for listening to container resizes.
@@ -69,7 +70,7 @@ var layoutClassName = "react-grid-layout";
  * The Flow type is pretty janky here. I can't just spread `WPProps` into this returned object - I wish I could - but it triggers
  * a flow bug of some sort that causes it to stop typechecking.
  */
-function WidthProvideRGL(ComposedComponent) {
+function RGLWidthProvider(ComposedComponent) {
     var _a;
     return _a = /** @class */ (function (_super) {
             __extends(WidthProvider, _super);
@@ -105,6 +106,7 @@ function WidthProvideRGL(ComposedComponent) {
                 window.removeEventListener("resize", this.onWindowResize);
             };
             WidthProvider.prototype.render = function () {
+                this.props;
                 var _a = this.props, measureBeforeMount = _a.measureBeforeMount, rest = __rest(_a, ["measureBeforeMount"]);
                 if (measureBeforeMount && !this.mounted) {
                     return (React.createElement("div", { className: (0, clsx_1["default"])(this.props.className, layoutClassName), style: this.props.style, 
@@ -125,4 +127,5 @@ function WidthProvideRGL(ComposedComponent) {
         },
         _a;
 }
-exports["default"] = WidthProvideRGL;
+exports.RGLWidthProvider = RGLWidthProvider;
+exports["default"] = RGLWidthProvider;

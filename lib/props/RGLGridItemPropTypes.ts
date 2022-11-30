@@ -1,7 +1,7 @@
 import PropTypes from "prop-types"
 import { ReactElement } from 'react'
-import { DroppingPosition, GridDragEvent, GridItemCallback, GridResizeEvent } from './RGLExtraTypes'
-import { ResizeHandle, resizeHandleAxesType, ResizeHandleAxis, resizeHandleType } from './RGLPropTypes'
+import { RGLDroppingPosition, RGLGridDragEvent, RGLGridItemCallback, RGLGridResizeEvent } from './RGLExtraTypes'
+import { RGLResizeHandle, rglResizeHandleAxesType, RGLResizeHandleAxis, rglResizeHandleType } from './RGLPropTypes'
 
 const RGLGridItemPropTypes = {
 	// Children must be only a single element
@@ -54,8 +54,8 @@ const RGLGridItemPropTypes = {
 	i: PropTypes.string.isRequired,
 
 	// Resize handle options
-	resizeHandles: resizeHandleAxesType,
-	resizeHandle: resizeHandleType,
+	resizeHandles: rglResizeHandleAxesType,
+	resizeHandle: rglResizeHandleType,
 
 	// Functions
 	onDragStop: PropTypes.func,
@@ -106,7 +106,7 @@ export type RGLGridItemProps = {
 	useCSSTransforms?: boolean,
 	usePercentages?: boolean,
 	transformScale: number,
-	droppingPosition?: DroppingPosition,
+	droppingPosition?: RGLDroppingPosition,
 
 	className: string,
 	style?: Object,
@@ -125,15 +125,15 @@ export type RGLGridItemProps = {
 	maxH: number,
 	i: string,
 
-	resizeHandles?: ResizeHandleAxis[],
-	resizeHandle?: ResizeHandle,
+	resizeHandles?: RGLResizeHandleAxis[],
+	resizeHandle?: RGLResizeHandle,
 
-	onDrag?: GridItemCallback<GridDragEvent>,
-	onDragStart?: GridItemCallback<GridDragEvent>,
-	onDragStop?: GridItemCallback<GridDragEvent>,
-	onResize?: GridItemCallback<GridResizeEvent>,
-	onResizeStart?: GridItemCallback<GridResizeEvent>,
-	onResizeStop?: GridItemCallback<GridResizeEvent>
+	onDrag?: RGLGridItemCallback<RGLGridDragEvent>,
+	onDragStart?: RGLGridItemCallback<RGLGridDragEvent>,
+	onDragStop?: RGLGridItemCallback<RGLGridDragEvent>,
+	onResize?: RGLGridItemCallback<RGLGridResizeEvent>,
+	onResizeStart?: RGLGridItemCallback<RGLGridResizeEvent>,
+	onResizeStop?: RGLGridItemCallback<RGLGridResizeEvent>
 }
 
 export type RGLGridItemState = {

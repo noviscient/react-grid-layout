@@ -8,17 +8,17 @@ import type {
 	ReactNodeArray
 } from "react"
 import type {
-	DragOverEvent,
-	EventCallback,
-	CompactType,
-	Layout,
-	LayoutItem
+	RGLDragOverEvent,
+	RGLEventCallback,
+	RGLCompactType,
+	RGLLayoutItemList,
+	RGLLayoutItem
 } from "./RGLExtraTypes"
 
 // util
-export type ReactRef<T extends HTMLElement> = { current: T | null }
+export type RGLReactRef<T extends HTMLElement> = { current: T | null }
 
-export type ResizeHandleAxis =
+export type RGLResizeHandleAxis =
 	| "s"
 	| "w"
 	| "e"
@@ -27,11 +27,11 @@ export type ResizeHandleAxis =
 	| "nw"
 	| "se"
 	| "ne"
-export type ResizeHandle =
+export type RGLResizeHandle =
 	| ReactNode
 	| ((
-		resizeHandleAxis: ResizeHandleAxis,
-		ref: ReactRef<HTMLElement>
+		resizeHandleAxis: RGLResizeHandleAxis,
+		ref: RGLReactRef<HTMLElement>
 	) => ReactNode)
 
 // Defines which resize handles should be rendered (default: 'se')
@@ -44,25 +44,25 @@ export type ResizeHandle =
 // 'nw' - Northwest handle (top-left)
 // 'se' - Southeast handle (bottom-right)
 // 'ne' - Northeast handle (top-right)
-export const resizeHandleAxesType =
+export const rglResizeHandleAxesType =
 	PropTypes.arrayOf(
-		PropTypes.oneOf<ResizeHandleAxis>(["s", "w", "e", "n", "sw", "nw", "se", "ne"])
+		PropTypes.oneOf<RGLResizeHandleAxis>(["s", "w", "e", "n", "sw", "nw", "se", "ne"])
 	)
 // Custom component for resize handles
-export const resizeHandleType =
+export const rglResizeHandleType =
 	PropTypes.oneOfType([PropTypes.node, PropTypes.func])
 
 export type RGLGridProps = {
 	className: string,
-	style: Object,
+	style: React.CSSProperties,
 	width: number,
 	autoSize: boolean,
 	cols: number,
 	draggableCancel: string,
 	draggableHandle: string,
 	verticalCompact: boolean,
-	compactType: CompactType,
-	layout: Layout,
+	compactType: RGLCompactType,
+	layout: RGLLayoutItemList,
 	margin: [number, number],
 	containerPadding?: [number, number],
 	rowHeight: number,
@@ -74,25 +74,25 @@ export type RGLGridProps = {
 	preventCollision: boolean,
 	useCSSTransforms: boolean,
 	transformScale: number,
-	droppingItem: Pick<LayoutItem, 'i' | 'w' | 'h'> & Partial<Omit<LayoutItem, 'i' | 'w' | 'h'>>,
-	resizeHandles: ResizeHandleAxis[],
-	resizeHandle ?: ResizeHandle,
+	droppingItem: Pick<RGLLayoutItem, 'i' | 'w' | 'h'> & Partial<Omit<RGLLayoutItem, 'i' | 'w' | 'h'>>,
+	resizeHandles: RGLResizeHandleAxis[],
+	resizeHandle ?: RGLResizeHandle,
 	allowOverlap: boolean,
 	// Callbacks
-	onLayoutChange: (layout: Layout) => void,
-	onDrag: EventCallback,
-	onDragStart: EventCallback,
-	onDragStop: EventCallback,
-	onResize: EventCallback,
-	onResizeStart: EventCallback,
-	onResizeStop: EventCallback,
-	onDropDragOver?: (e: React.DragEvent) => (Partial<LayoutItem> | false),
-	onDrop: (layout: Layout, item: LayoutItem | undefined, e: React.DragEvent) => void,
+	onLayoutChange: (layout: RGLLayoutItemList) => void,
+	onDrag: RGLEventCallback,
+	onDragStart: RGLEventCallback,
+	onDragStop: RGLEventCallback,
+	onResize: RGLEventCallback,
+	onResizeStart: RGLEventCallback,
+	onResizeStop: RGLEventCallback,
+	onDropDragOver?: (e: React.DragEvent) => (Partial<RGLLayoutItem> | false),
+	onDrop: (layout: RGLLayoutItemList, item: RGLLayoutItem | undefined, e: React.DragEvent) => void,
 	children: React.ReactElement[],
 	innerRef?: React.RefObject<HTMLDivElement>
 };
 
-export type DefaultProps = Omit<
+export type RGLDefaultProps = Omit<
 	RGLGridProps,
 	'children' | 'width'
 >
@@ -184,8 +184,8 @@ const RGLPropTypes = {
 	isDroppable: PropTypes.bool,
 
 	// Resize handle options
-	resizeHandles: resizeHandleAxesType,
-	resizeHandle: resizeHandleType,
+	resizeHandles: rglResizeHandleAxesType,
+	resizeHandle: rglResizeHandleType,
 
 	//
 	// Callbacks

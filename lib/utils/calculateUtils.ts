@@ -1,7 +1,7 @@
-import type { Position } from '../RGLExtraTypes'
-import { RGLGridItemState } from '../RGLGridItemPropTypes'
+import type { RGLPosition } from '../props/RGLExtraTypes'
+import { RGLGridItemState } from '../props/RGLGridItemPropTypes'
 
-export type PositionParams = {
+export type RGLPositionParams = {
 	margin: [number, number],
 	containerPadding: [number, number],
 	containerWidth: number,
@@ -11,7 +11,7 @@ export type PositionParams = {
 }
 
 // Helper for generating column width
-export function calcGridColWidth (positionParams: PositionParams): number {
+export function rglCalcGridColWidth (positionParams: RGLPositionParams): number {
 	const { margin, containerPadding, containerWidth, cols } = positionParams
 	return (
 		(containerWidth - margin[0] * (cols - 1) - containerPadding[0] * 2) / cols
@@ -22,7 +22,7 @@ export function calcGridColWidth (positionParams: PositionParams): number {
 // calcGridItemWHPx(w, colWidth, margin[0])
 // or
 // calcGridItemWHPx(h, rowHeight, margin[1])
-export function calcGridItemWHPx (
+export function rglCalcGridItemWHPx (
 	gridUnits: number,
 	colOrRowSize: number,
 	marginPx: number
@@ -37,24 +37,24 @@ export function calcGridItemWHPx (
 /**
  * Return position on the page given an x, y, w, h.
  * left, top, width, height are all in pixels.
- * @param  {PositionParams} positionParams  Parameters of grid needed for coordinates calculations.
+ * @param  {RGLPositionParams} positionParams  Parameters of grid needed for coordinates calculations.
  * @param  {Number}  x                      X coordinate in grid units.
  * @param  {Number}  y                      Y coordinate in grid units.
  * @param  {Number}  w                      W coordinate in grid units.
  * @param  {Number}  h                      H coordinate in grid units.
- * @return {Position}                       Object containing coords.
+ * @return {RGLPosition}                       Object containing coords.
  */
-export function calcGridItemPosition (
-	positionParams: PositionParams,
+export function rglCalcGridItemPosition (
+	positionParams: RGLPositionParams,
 	x: number,
 	y: number,
 	w: number,
 	h: number,
 	state?: RGLGridItemState
-): Position {
+): RGLPosition {
 	const { margin, containerPadding, rowHeight } = positionParams
-	const colWidth = calcGridColWidth(positionParams)
-	const out: Position = { width: 0, height: 0, top: 0, left: 0 }
+	const colWidth = rglCalcGridColWidth(positionParams)
+	const out: RGLPosition = { width: 0, height: 0, top: 0, left: 0 }
 
 	// If resizing, use the exact width and height as returned from resizing callbacks.
 	if (state && state.resizing) {
@@ -63,8 +63,8 @@ export function calcGridItemPosition (
 	}
 	// Otherwise, calculate from grid units.
 	else {
-		out.width = calcGridItemWHPx(w, colWidth, margin[0])
-		out.height = calcGridItemWHPx(h, rowHeight, margin[1])
+		out.width = rglCalcGridItemWHPx(w, colWidth, margin[0])
+		out.height = rglCalcGridItemWHPx(h, rowHeight, margin[1])
 	}
 
 	// If dragging, use the exact width and height as returned from dragging callbacks.
@@ -83,22 +83,22 @@ export function calcGridItemPosition (
 
 /**
  * Translate x and y coordinates from pixels to grid units.
- * @param  {PositionParams} positionParams  Parameters of grid needed for coordinates calculations.
+ * @param  {RGLPositionParams} positionParams  Parameters of grid needed for coordinates calculations.
  * @param  {Number} top                     Top position (relative to parent) in pixels.
  * @param  {Number} left                    Left position (relative to parent) in pixels.
  * @param  {Number} w                       W coordinate in grid units.
  * @param  {Number} h                       H coordinate in grid units.
  * @return {Object}                         x and y in grid units.
  */
-export function calcXY (
-	positionParams: PositionParams,
+export function rglCalcXY (
+	positionParams: RGLPositionParams,
 	top: number,
 	left: number,
 	w: number,
 	h: number
 ): { x: number, y: number } {
 	const { margin, cols, rowHeight, maxRows } = positionParams
-	const colWidth = calcGridColWidth(positionParams)
+	const colWidth = rglCalcGridColWidth(positionParams)
 
 	// left = colWidth * x + margin * (x + 1)
 	// l = cx + m(x+1)
@@ -111,29 +111,29 @@ export function calcXY (
 	let y = Math.round((top - margin[1]) / (rowHeight + margin[1]))
 
 	// Capping
-	x = clamp(x, 0, cols - w)
-	y = clamp(y, 0, maxRows - h)
+	x = rglClamp(x, 0, cols - w)
+	y = rglClamp(y, 0, maxRows - h)
 	return { x, y }
 }
 
 /**
  * Given a height and width in pixel values, calculate grid units.
- * @param  {PositionParams} positionParams  Parameters of grid needed for coordinates calcluations.
+ * @param  {RGLPositionParams} positionParams  Parameters of grid needed for coordinates calcluations.
  * @param  {Number} height                  Height in pixels.
  * @param  {Number} width                   Width in pixels.
  * @param  {Number} x                       X coordinate in grid units.
  * @param  {Number} y                       Y coordinate in grid units.
  * @return {Object}                         w, h as grid units.
  */
-export function calcWH (
-	positionParams: PositionParams,
+export function rglCalcWH (
+	positionParams: RGLPositionParams,
 	width: number,
 	height: number,
 	x: number,
 	y: number
 ): { w: number, h: number } {
 	const { margin, maxRows, cols, rowHeight } = positionParams
-	const colWidth = calcGridColWidth(positionParams)
+	const colWidth = rglCalcGridColWidth(positionParams)
 
 	// width = colWidth * w - (margin * (w - 1))
 	// ...
@@ -142,13 +142,13 @@ export function calcWH (
 	let h = Math.round((height + margin[1]) / (rowHeight + margin[1]))
 
 	// Capping
-	w = clamp(w, 0, cols - x)
-	h = clamp(h, 0, maxRows - y)
+	w = rglClamp(w, 0, cols - x)
+	h = rglClamp(h, 0, maxRows - y)
 	return { w, h }
 }
 
 // Similar to _.clamp
-export function clamp (
+export function rglClamp (
 	num: number,
 	lowerBound: number,
 	upperBound: number

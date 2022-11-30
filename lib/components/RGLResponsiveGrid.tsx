@@ -2,13 +2,14 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
+import rglCoreUtils from '../utils/coreUtils';
 
-import {
+const {
 	cloneLayout,
 	synchronizeLayoutWithChildren,
 	validateLayout,
 	noop,
-} from '../utils/coreUtils';
+} = rglCoreUtils
 import {
 	getBreakpointFromWidth,
 	getColsFromBreakpoint,
@@ -18,12 +19,12 @@ import {
 	BreakpointWidthsMap,
 	DefaultBreakpoints
 } from '../utils/responsiveUtils';
-import ReactGridLayout from './ReactGridLayout';
-import { CompactType, Layout } from '../RGLExtraTypes'
-import { RGLGridProps } from '../RGLPropTypes'
+import ReactGridLayout from './RGLGrid';
+import { RGLCompactType, RGLLayoutItemList } from '../props/RGLExtraTypes'
+import { RGLGridProps } from '../props/RGLPropTypes'
 
 const type = (obj: any) => Object.prototype.toString.call(obj);
-const fallbackCompactType: CompactType = 'vertical'
+const fallbackCompactType: RGLCompactType = 'vertical'
 
 /**
  * Get a value of margin or containerPadding.
@@ -43,7 +44,7 @@ function getIndentationValue(
 }
 
 type State<B extends string = DefaultBreakpoints> = {
-	layout: Layout,
+	layout: RGLLayoutItemList,
 	breakpoint: B,
 	cols: number,
 	layouts?: ResponsiveLayout<B>
@@ -75,7 +76,7 @@ type ResponsiveColsSpec<B extends string = DefaultBreakpoints> = { cols: { [k in
 type ResponsiveContainerPaddingSpec<B extends string = DefaultBreakpoints> = { containerPadding: { [k in B]?: [number, number] | null } }
 type DefaultProps<B extends string = DefaultBreakpoints> = Pick<Props, 'allowOverlap' | 'breakpoints' | 'layouts' | 'margin' | 'onBreakpointChange' | 'onLayoutChange' | 'onWidthChange'> & ResponsiveColsSpec<B> & ResponsiveContainerPaddingSpec<B>
 
-export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpoints> extends React.Component<
+export class RGLResponsiveGrid<B extends string = DefaultBreakpoints> extends React.Component<
 	// Omit<Props, 'cols'> & ResponsiveColsSpec,
 	Props<B>,
 	State<B>
@@ -225,7 +226,7 @@ export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpo
 	}
 
 	// wrap layouts so we do not need to pass layouts to child
-	onLayoutChange = (layout: Layout) => {
+	onLayoutChange = (layout: RGLLayoutItemList) => {
 		this.props.onLayoutChange(layout, {
 			...this.props.layouts,
 			[this.state.breakpoint]: layout
@@ -336,3 +337,4 @@ export default class ResponsiveReactGridLayout<B extends string = DefaultBreakpo
 		);
 	}
 }
+export default RGLResponsiveGrid

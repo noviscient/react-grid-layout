@@ -1,14 +1,14 @@
-import { CompactType, Layout } from '../RGLExtraTypes';
+import { RGLCompactType, RGLLayoutItemList } from '../props/RGLExtraTypes';
 export declare type Breakpoint = string;
 export declare type DefaultBreakpoints = "lg" | "md" | "sm" | "xs" | "xxs";
 export declare type ResponsiveLayout<T extends Breakpoint> = {
-    [breakpoint in T]?: Layout;
+    [breakpoint in T]?: RGLLayoutItemList;
 };
 export declare type BreakpointWidthsMap<T extends Breakpoint> = {
     [breakpoint in T]: number | null | undefined;
 };
-export declare type OnLayoutChangeCallback = (layout: Layout, breakpoints: {
-    [key: Breakpoint]: Layout;
+export declare type OnLayoutChangeCallback = (layout: RGLLayoutItemList, breakpoints: {
+    [key: Breakpoint]: RGLLayoutItemList;
 }) => void;
 /**
  * Given a width, find the highest breakpoint that matches is valid for it (width > breakpoint).
@@ -39,7 +39,7 @@ export declare function getColsFromBreakpoint<B extends string>(breakpoint: B, c
  *   vertically.
  * @return {Array}             New layout.
  */
-export declare function findOrGenerateResponsiveLayout<B extends string>(layouts: ResponsiveLayout<B>, breakpoints: BreakpointWidthsMap<B>, breakpoint: B, lastBreakpoint: B, cols: number, compactType: CompactType): Layout;
+export declare function findOrGenerateResponsiveLayout<B extends string>(layouts: ResponsiveLayout<B>, breakpoints: BreakpointWidthsMap<B>, breakpoint: B, lastBreakpoint: B, cols: number, compactType: RGLCompactType): RGLLayoutItemList;
 /**
  * Given breakpoints, return an array of breakpoints sorted by width. This is usually
  * e.g. ['xxs', 'xs', 'sm', ...]

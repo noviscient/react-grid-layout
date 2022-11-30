@@ -29,19 +29,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 exports.__esModule = true;
+exports.RGLGridItem = void 0;
 var clsx_1 = __importDefault(require("clsx"));
 var react_1 = __importDefault(require("react"));
 var react_draggable_1 = require("react-draggable");
 var react_resizable_1 = require("react-resizable");
+var RGLGridItemPropTypes_1 = __importDefault(require("../props/RGLGridItemPropTypes"));
 var calculateUtils_1 = require("../utils/calculateUtils");
-var RGLGridItemPropTypes_1 = __importDefault(require("../RGLGridItemPropTypes"));
-var coreUtils_1 = require("../utils/coreUtils");
+var coreUtils_1 = __importDefault(require("../utils/coreUtils"));
+var fastPositionEqual = coreUtils_1["default"].fastPositionEqual, perc = coreUtils_1["default"].perc, setTopLeft = coreUtils_1["default"].setTopLeft, setTransform = coreUtils_1["default"].setTransform;
 /**
  * An individual item within a ReactGridLayout.
  */
-var GridItem = /** @class */ (function (_super) {
-    __extends(GridItem, _super);
-    function GridItem() {
+var RGLGridItem = /** @class */ (function (_super) {
+    __extends(RGLGridItem, _super);
+    function RGLGridItem() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.state = {
             resizing: null,
@@ -69,7 +71,7 @@ var GridItem = /** @class */ (function (_super) {
             newPosition.top = cTop - pTop + offsetParent.scrollTop;
             _this.setState({ dragging: newPosition });
             // Call callback with this data
-            var _c = (0, calculateUtils_1.calcXY)(_this.getPositionParams(), newPosition.top, newPosition.left, _this.props.w, _this.props.h), x = _c.x, y = _c.y;
+            var _c = (0, calculateUtils_1.rglCalcXY)(_this.getPositionParams(), newPosition.top, newPosition.left, _this.props.w, _this.props.h), x = _c.x, y = _c.y;
             return onDragStart.call(_this, _this.props.i, x, y, {
                 e: e,
                 node: node,
@@ -98,17 +100,17 @@ var GridItem = /** @class */ (function (_super) {
                 var offsetParent = node.offsetParent;
                 if (offsetParent) {
                     var _c = _this.props, margin = _c.margin, rowHeight = _c.rowHeight;
-                    var bottomBoundary = offsetParent.clientHeight - (0, calculateUtils_1.calcGridItemWHPx)(h, rowHeight, margin[1]);
-                    top = (0, calculateUtils_1.clamp)(top, 0, bottomBoundary);
-                    var colWidth = (0, calculateUtils_1.calcGridColWidth)(positionParams);
-                    var rightBoundary = containerWidth - (0, calculateUtils_1.calcGridItemWHPx)(w, colWidth, margin[0]);
-                    left = (0, calculateUtils_1.clamp)(left, 0, rightBoundary);
+                    var bottomBoundary = offsetParent.clientHeight - (0, calculateUtils_1.rglCalcGridItemWHPx)(h, rowHeight, margin[1]);
+                    top = (0, calculateUtils_1.rglClamp)(top, 0, bottomBoundary);
+                    var colWidth = (0, calculateUtils_1.rglCalcGridColWidth)(positionParams);
+                    var rightBoundary = containerWidth - (0, calculateUtils_1.rglCalcGridItemWHPx)(w, colWidth, margin[0]);
+                    left = (0, calculateUtils_1.rglClamp)(left, 0, rightBoundary);
                 }
             }
             var newPosition = { top: top, left: left };
             _this.setState({ dragging: newPosition });
             // Call callback with this data
-            var _d = (0, calculateUtils_1.calcXY)(positionParams, top, left, w, h), x = _d.x, y = _d.y;
+            var _d = (0, calculateUtils_1.rglCalcXY)(positionParams, top, left, w, h), x = _d.x, y = _d.y;
             return onDrag.call(_this, i, x, y, {
                 e: e,
                 node: node,
@@ -130,7 +132,7 @@ var GridItem = /** @class */ (function (_super) {
             var _c = _this.state.dragging, left = _c.left, top = _c.top;
             var newPosition = { top: top, left: left };
             _this.setState({ dragging: null });
-            var _d = (0, calculateUtils_1.calcXY)(_this.getPositionParams(), top, left, w, h), x = _d.x, y = _d.y;
+            var _d = (0, calculateUtils_1.rglCalcXY)(_this.getPositionParams(), top, left, w, h), x = _d.x, y = _d.y;
             return onDragStop.call(_this, i, x, y, {
                 e: e,
                 node: node,
@@ -163,7 +165,7 @@ var GridItem = /** @class */ (function (_super) {
         };
         return _this;
     }
-    GridItem.prototype.shouldComponentUpdate = function (nextProps, nextState) {
+    RGLGridItem.prototype.shouldComponentUpdate = function (nextProps, nextState) {
         // We can't deeply compare children. If the developer memoizes them, we can
         // use this optimization.
         if (this.props.children !== nextProps.children)
@@ -171,20 +173,20 @@ var GridItem = /** @class */ (function (_super) {
         if (this.props.droppingPosition !== nextProps.droppingPosition)
             return true;
         // TODO memoize these calculations so they don't take so long?
-        var oldPosition = (0, calculateUtils_1.calcGridItemPosition)(this.getPositionParams(this.props), this.props.x, this.props.y, this.props.w, this.props.h, this.state);
-        var newPosition = (0, calculateUtils_1.calcGridItemPosition)(this.getPositionParams(nextProps), nextProps.x, nextProps.y, nextProps.w, nextProps.h, nextState);
-        return (!(0, coreUtils_1.fastPositionEqual)(oldPosition, newPosition) ||
+        var oldPosition = (0, calculateUtils_1.rglCalcGridItemPosition)(this.getPositionParams(this.props), this.props.x, this.props.y, this.props.w, this.props.h, this.state);
+        var newPosition = (0, calculateUtils_1.rglCalcGridItemPosition)(this.getPositionParams(nextProps), nextProps.x, nextProps.y, nextProps.w, nextProps.h, nextState);
+        return (!fastPositionEqual(oldPosition, newPosition) ||
             this.props.useCSSTransforms !== nextProps.useCSSTransforms);
     };
-    GridItem.prototype.componentDidMount = function () {
+    RGLGridItem.prototype.componentDidMount = function () {
         this.moveDroppingItem({});
     };
-    GridItem.prototype.componentDidUpdate = function (prevProps) {
+    RGLGridItem.prototype.componentDidUpdate = function (prevProps) {
         this.moveDroppingItem(prevProps);
     };
     // When a droppingPosition is present, this means we should fire a move event, as if we had moved
     // this element by `x, y` pixels.
-    GridItem.prototype.moveDroppingItem = function (prevProps) {
+    RGLGridItem.prototype.moveDroppingItem = function (prevProps) {
         var droppingPosition = this.props.droppingPosition;
         if (!droppingPosition)
             return;
@@ -214,7 +216,7 @@ var GridItem = /** @class */ (function (_super) {
             });
         }
     };
-    GridItem.prototype.getPositionParams = function (props) {
+    RGLGridItem.prototype.getPositionParams = function (props) {
         if (props === void 0) { props = this.props; }
         return {
             cols: props.cols,
@@ -235,20 +237,20 @@ var GridItem = /** @class */ (function (_super) {
      * @param  {Object} pos Position object with width, height, left, top.
      * @return {Object}     Style object.
      */
-    GridItem.prototype.createStyle = function (pos) {
+    RGLGridItem.prototype.createStyle = function (pos) {
         var _a = this.props, usePercentages = _a.usePercentages, containerWidth = _a.containerWidth, useCSSTransforms = _a.useCSSTransforms;
         var style;
         // CSS Transforms support (default)
         if (useCSSTransforms) {
-            style = (0, coreUtils_1.setTransform)(pos);
+            style = setTransform(pos);
         }
         else {
             // top,left (slow)
-            style = (0, coreUtils_1.setTopLeft)(pos);
+            style = setTopLeft(pos);
             // This is used for server rendering.
             if (usePercentages) {
-                style.left = (0, coreUtils_1.perc)(pos.left / containerWidth);
-                style.width = (0, coreUtils_1.perc)(pos.width / containerWidth);
+                style.left = perc(pos.left / containerWidth);
+                style.width = perc(pos.width / containerWidth);
             }
         }
         return style;
@@ -258,7 +260,7 @@ var GridItem = /** @class */ (function (_super) {
      * @param  {Element} child    Child element.
      * @return {Element}          Child wrapped in Draggable.
      */
-    GridItem.prototype.mixinDraggable = function (child, isDraggable) {
+    RGLGridItem.prototype.mixinDraggable = function (child, isDraggable) {
         var _this = this;
         return (react_1["default"].createElement(react_draggable_1.DraggableCore, { disabled: !isDraggable, onStart: function (e, d) { return _this.onDragStart(e, d); }, onDrag: function (e, d) { return _this.onDrag(e, d); }, onStop: function (e, d) { return _this.onDragStop(e, d); }, handle: this.props.handle, cancel: ".react-resizable-handle" +
                 (this.props.cancel ? "," + this.props.cancel : ""), scale: this.props.transformScale, nodeRef: this.elementRef }, child));
@@ -269,14 +271,14 @@ var GridItem = /** @class */ (function (_super) {
      * @param  {Object} position  Position object (pixel values)
      * @return {Element}          Child wrapped in Resizable.
      */
-    GridItem.prototype.mixinResizable = function (child, position, isResizable) {
+    RGLGridItem.prototype.mixinResizable = function (child, position, isResizable) {
         var _a = this.props, cols = _a.cols, x = _a.x, minW = _a.minW, minH = _a.minH, maxW = _a.maxW, maxH = _a.maxH, transformScale = _a.transformScale, resizeHandles = _a.resizeHandles, resizeHandle = _a.resizeHandle;
         var positionParams = this.getPositionParams();
         // This is the max possible width - doesn't go to infinity because of the width of the window
-        var maxWidth = (0, calculateUtils_1.calcGridItemPosition)(positionParams, 0, 0, cols - x, 0).width;
+        var maxWidth = (0, calculateUtils_1.rglCalcGridItemPosition)(positionParams, 0, 0, cols - x, 0).width;
         // Calculate min/max constraints using our min & maxes
-        var mins = (0, calculateUtils_1.calcGridItemPosition)(positionParams, 0, 0, minW, minH);
-        var maxes = (0, calculateUtils_1.calcGridItemPosition)(positionParams, 0, 0, maxW, maxH);
+        var mins = (0, calculateUtils_1.rglCalcGridItemPosition)(positionParams, 0, 0, minW, minH);
+        var maxes = (0, calculateUtils_1.rglCalcGridItemPosition)(positionParams, 0, 0, maxW, maxH);
         var minConstraints = [mins.width, mins.height];
         var maxConstraints = [
             Math.min(maxes.width, maxWidth),
@@ -298,7 +300,7 @@ var GridItem = /** @class */ (function (_super) {
      * @param  {String} handlerName Handler name to wrap.
      * @return {Function}           Handler function.
      */
-    GridItem.prototype.onResizeHandler = function (e, _a, handlerName) {
+    RGLGridItem.prototype.onResizeHandler = function (e, _a, handlerName) {
         var node = _a.node, size = _a.size;
         var handler = this.props[handlerName];
         if (!handler)
@@ -306,20 +308,20 @@ var GridItem = /** @class */ (function (_super) {
         var _b = this.props, cols = _b.cols, x = _b.x, y = _b.y, i = _b.i, maxH = _b.maxH, minH = _b.minH;
         var _c = this.props, minW = _c.minW, maxW = _c.maxW;
         // Get new XY
-        var _d = (0, calculateUtils_1.calcWH)(this.getPositionParams(), size.width, size.height, x, y), w = _d.w, h = _d.h;
+        var _d = (0, calculateUtils_1.rglCalcWH)(this.getPositionParams(), size.width, size.height, x, y), w = _d.w, h = _d.h;
         // minW should be at least 1 (TODO propTypes validation?)
         minW = Math.max(minW, 1);
         // maxW should be at most (cols - x)
         maxW = Math.min(maxW, cols - x);
         // Min/max capping
-        w = (0, calculateUtils_1.clamp)(w, minW, maxW);
-        h = (0, calculateUtils_1.clamp)(h, minH, maxH);
+        w = (0, calculateUtils_1.rglClamp)(w, minW, maxW);
+        h = (0, calculateUtils_1.rglClamp)(h, minH, maxH);
         this.setState({ resizing: handlerName === "onResizeStop" ? null : size });
         handler.call(this, i, w, h, { e: e, node: node, size: size });
     };
-    GridItem.prototype.render = function () {
+    RGLGridItem.prototype.render = function () {
         var _a = this.props, x = _a.x, y = _a.y, w = _a.w, h = _a.h, isDraggable = _a.isDraggable, isResizable = _a.isResizable, droppingPosition = _a.droppingPosition, useCSSTransforms = _a.useCSSTransforms;
-        var pos = (0, calculateUtils_1.calcGridItemPosition)(this.getPositionParams(), x, y, w, h, this.state);
+        var pos = (0, calculateUtils_1.rglCalcGridItemPosition)(this.getPositionParams(), x, y, w, h, this.state);
         var child = react_1["default"].Children.only(this.props.children);
         // Create the child element. We clone the existing element but modify its className and style.
         var newChild = react_1["default"].cloneElement(child, {
@@ -341,8 +343,8 @@ var GridItem = /** @class */ (function (_super) {
         newChild = this.mixinDraggable(newChild, isDraggable);
         return newChild;
     };
-    GridItem.propTypes = RGLGridItemPropTypes_1["default"];
-    GridItem.defaultProps = {
+    RGLGridItem.propTypes = RGLGridItemPropTypes_1["default"];
+    RGLGridItem.defaultProps = {
         className: "",
         cancel: "",
         handle: "",
@@ -352,6 +354,7 @@ var GridItem = /** @class */ (function (_super) {
         maxW: Infinity,
         transformScale: 1
     };
-    return GridItem;
+    return RGLGridItem;
 }(react_1["default"].Component));
-exports["default"] = GridItem;
+exports.RGLGridItem = RGLGridItem;
+exports["default"] = RGLGridItem;

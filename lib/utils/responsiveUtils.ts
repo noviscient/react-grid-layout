@@ -1,22 +1,24 @@
 // @flow
 
-import { CompactType, Layout } from '../RGLExtraTypes'
-import { cloneLayout, compact, correctBounds } from "./coreUtils"
+import { RGLCompactType, RGLLayoutItemList } from '../props/RGLExtraTypes'
+import coreUtils from "./coreUtils"
+
+const { cloneLayout, compact, correctBounds } = coreUtils
 
 export type Breakpoint = string
 export type DefaultBreakpoints = "lg" | "md" | "sm" | "xs" | "xxs"
 
 // + indicates read-only
 export type ResponsiveLayout<T extends Breakpoint> = {
-	[breakpoint in T]?: Layout
+	[breakpoint in T]?: RGLLayoutItemList
 };
 export type BreakpointWidthsMap<T extends Breakpoint> = {
   	[breakpoint in T]: number | null | undefined
 };
 
 export type OnLayoutChangeCallback = (
-	layout: Layout,
-	breakpoints: { [key: Breakpoint]: Layout }
+	layout: RGLLayoutItemList,
+	breakpoints: { [key: Breakpoint]: RGLLayoutItemList }
 ) => void
 
 /**
@@ -79,8 +81,8 @@ export function findOrGenerateResponsiveLayout <B extends string>(
 	breakpoint: B,
 	lastBreakpoint: B,
 	cols: number,
-	compactType: CompactType
-): Layout {
+	compactType: RGLCompactType
+): RGLLayoutItemList {
 	// If it already exists, just return it.
 	if (layouts[breakpoint]) return cloneLayout(layouts[breakpoint]!)
 	// Find or generate the next layout

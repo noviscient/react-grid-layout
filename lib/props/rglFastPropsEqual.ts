@@ -4,7 +4,7 @@ import isDeepEqual from 'lodash/isEqual'
 const propKeys = Object.keys(RGLPropTypes) as (keyof typeof RGLPropTypes)[]
 propKeys.splice(propKeys.indexOf('children'), 1)
 
-export const fastRGLPropsEqual = (a: RGLGridProps, b: RGLGridProps) => {
+export const rglFastGridPropsEqual = (a: RGLGridProps, b: RGLGridProps) => {
 	return a.allowOverlap === b.allowOverlap &&
 		a.autoSize === b.autoSize &&
 		// a.children

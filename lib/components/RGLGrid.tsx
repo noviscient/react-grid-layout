@@ -1,7 +1,17 @@
-import * as React from 'react'
-import isEqual from 'lodash/isEqual'
 import clsx from 'clsx'
-import {
+import isEqual from 'lodash/isEqual'
+import * as React from 'react'
+import { rglFastGridPropsEqual } from '../props/rglFastPropsEqual'
+import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItemList, RGLLayoutItem } from '../props/RGLExtraTypes'
+import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes'
+import rglCoreUtils from '../utils/coreUtils'
+import { rglCalcXY } from '../utils/calculateUtils'
+import type { ReactElement } from 'react'
+import ReactGridLayoutPropTypes from '../props/RGLPropTypes'
+import GridItem from './RGLGridItem'
+import type { RGLPositionParams } from '../utils/calculateUtils'
+
+const {
 	bottom,
 	childrenEqual,
 	cloneLayoutItem,
@@ -13,41 +23,27 @@ import {
 	noop,
 	synchronizeLayoutWithChildren,
 	withLayoutItem
-} from '../utils/coreUtils'
-
-import { calcXY } from '../utils/calculateUtils'
-
-import GridItem from './GridItem'
-import ReactGridLayoutPropTypes from '../RGLPropTypes'
-import type {
-	ReactChildren,
-	ReactElement
-} from 'react'
-
-import type { PositionParams } from '../utils/calculateUtils'
+} = rglCoreUtils
 
 type State = {
-	activeDrag?: LayoutItem | null,
-	layout: Layout,
+	activeDrag?: RGLLayoutItem | null,
+	layout: RGLLayoutItemList,
 	mounted: boolean,
-	oldDragItem?: LayoutItem | null,
-	oldLayout?: Layout | null,
-	oldResizeItem?: LayoutItem | null,
+	oldDragItem?: RGLLayoutItem | null,
+	oldLayout?: RGLLayoutItemList | null,
+	oldResizeItem?: RGLLayoutItem | null,
 	droppingDOMNode?: ReactElement<any> | null,
-	droppingPosition?: DroppingPosition | null,
+	droppingPosition?: RGLDroppingPosition | null,
 	// Mirrored props
 	children: React.ReactElement[],
-	compactType?: CompactType,
-	propsLayout?: Layout,
+	compactType?: RGLCompactType,
+	propsLayout?: RGLLayoutItemList,
 	rect?: DOMRect | null
 }
 
-import type { RGLGridProps as Props, DefaultProps } from '../RGLPropTypes'
-import { CompactType, DragOverEvent, DroppingPosition, GridDragEvent, GridResizeEvent, Layout, LayoutItem } from '../RGLExtraTypes'
-import { fastRGLPropsEqual } from '../fastRGLPropsEqual'
 
 // End Types
-const fallbackCompactType: CompactType = 'vertical'
+const fallbackCompactType: RGLCompactType = 'vertical'
 const layoutClassName = 'react-grid-layout'
 let isFirefox = false
 // Try...catch will protect from navigator not existing (e.g. node) or a bad implementation of navigator
@@ -61,14 +57,14 @@ try {
  * A reactive, fluid grid layout with draggable, resizable components.
  */
 
-export default class ReactGridLayout extends React.Component<Props, State> {
+export class RGLGrid extends React.Component<Props, State> {
 	// TODO publish internal ReactClass displayName transform
-	static displayName: string = 'ReactGridLayout';
+	static displayName: string = 'RGLGrid';
 
 	// Refactored to another module to make way for preval
 	static propTypes = ReactGridLayoutPropTypes;
 
-	static defaultProps: DefaultProps = {
+	static defaultProps: RGLDefaultProps = {
 		innerRef: React.createRef(),
 		autoSize: true,
 		cols: 12,
@@ -189,7 +185,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 			// from SCU is if the user intentionally memoizes children. If they do, and they can
 			// handle changes properly, performance will increase.
 			this.props.children !== nextProps.children ||
-			!fastRGLPropsEqual(this.props, nextProps) ||
+			!rglFastGridPropsEqual(this.props, nextProps) ||
 			this.state.activeDrag !== nextState.activeDrag ||
 			this.state.mounted !== nextState.mounted ||
 			this.state.droppingPosition !== nextState.droppingPosition
@@ -235,7 +231,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		x: number,
 		y: number,
-		{ e, node }: GridDragEvent
+		{ e, node }: RGLGridDragEvent
 	) => {
 		const { layout } = this.state
 		const l = getLayoutItem(layout, i)
@@ -261,7 +257,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		x: number,
 		y: number,
-		{ e, node }: GridDragEvent
+		{ e, node }: RGLGridDragEvent
 	) => {
 		const { oldDragItem } = this.state
 		let { layout } = this.state
@@ -315,7 +311,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		x: number,
 		y: number,
-		{ e, node }: GridDragEvent
+		{ e, node }: RGLGridDragEvent
 	) => {
 		if (!this.state.activeDrag) return
 
@@ -356,7 +352,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		this.onLayoutMaybeChanged(newLayout, oldLayout ?? null)
 	};
 
-	onLayoutMaybeChanged (newLayout: Layout, oldLayout: null | Layout) {
+	onLayoutMaybeChanged (newLayout: RGLLayoutItemList, oldLayout: null | RGLLayoutItemList) {
 		if (!oldLayout) oldLayout = this.state.layout
 
 		if (!isEqual(oldLayout, newLayout)) {
@@ -368,7 +364,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		w: number,
 		h: number,
-		{ e, node }: GridResizeEvent
+		{ e, node }: RGLGridResizeEvent
 	) => {
 		const { layout } = this.state
 		const l = getLayoutItem(layout, i)
@@ -386,7 +382,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		w: number,
 		h: number,
-		{ e, node }: GridResizeEvent
+		{ e, node }: RGLGridResizeEvent
 	) => {
 		const { layout, oldResizeItem } = this.state
 		const { cols, preventCollision, allowOverlap } = this.props
@@ -453,7 +449,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		i: string,
 		w: number,
 		h: number,
-		{ e, node }: GridResizeEvent
+		{ e, node }: RGLGridResizeEvent
 	) => {
 		const { layout, oldResizeItem } = this.state
 		const { cols, allowOverlap } = this.props
@@ -670,7 +666,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		const actualLayerX = pageX - this.state.rect.x
 		const actualLayerY = pageY - this.state.rect.y
 
-		const droppingPosition: DroppingPosition = {
+		const droppingPosition: RGLDroppingPosition = {
 			left: actualLayerX / transformScale,
 			top: actualLayerY / transformScale,
 			e
@@ -683,7 +679,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		console.log('dp', droppingPosition) // where is dp?
 
 		if (!this.state.droppingDOMNode) {
-			const positionParams: PositionParams = {
+			const positionParams: RGLPositionParams = {
 				cols,
 				margin,
 				maxRows,
@@ -692,7 +688,7 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 				containerPadding: containerPadding || margin
 			}
 
-			const calculatedPosition = calcXY(
+			const calculatedPosition = rglCalcXY(
 				positionParams,
 				// layerY,
 				// layerX,
@@ -816,3 +812,4 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 		);
 	}
 }
+export default RGLGrid

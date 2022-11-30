@@ -1,21 +1,18 @@
 import clsx from "clsx"
 import type { ReactElement, ReactNode, SyntheticEvent } from "react"
 import React from "react"
-import { DraggableCore, DraggableData, DraggableEvent, DraggableEventHandler } from "react-draggable"
-import { Resizable, ResizeCallbackData } from 'react-resizable'
+import { DraggableCore, DraggableEvent } from "react-draggable"
+import { Resizable } from 'react-resizable'
+import type { RGLPartialPosition, RGLPosition, RGLReactDraggableCallbackData } from '../props/RGLExtraTypes'
+import RGLGridItemPropTypes, { RGLGridItemProps, RGLGridItemState } from '../props/RGLGridItemPropTypes'
+import type { RGLReactRef } from '../props/RGLPropTypes'
 import {
-	calcGridColWidth, calcGridItemPosition,
-	calcGridItemWHPx, calcWH, calcXY, clamp, PositionParams
+	rglCalcGridColWidth, rglCalcGridItemPosition,
+	rglCalcGridItemWHPx, rglCalcWH, rglCalcXY, rglClamp, RGLPositionParams
 } from '../utils/calculateUtils'
-import type {
-	PartialPosition,
-	Position, ReactDraggableCallbackData
-} from '../RGLExtraTypes'
-import RGLGridItemPropTypes, { RGLGridItemProps, RGLGridItemState } from '../RGLGridItemPropTypes'
-import type {
-	ReactRef
-} from '../RGLPropTypes'
-import { fastPositionEqual, perc, setTopLeft, setTransform } from '../utils/coreUtils'
+import rglCoreUtils from '../utils/coreUtils'
+
+const { fastPositionEqual, perc, setTopLeft, setTransform } = rglCoreUtils
 
 type State = RGLGridItemState
 type Props = RGLGridItemProps
@@ -34,7 +31,7 @@ type DefaultProps = {
 /**
  * An individual item within a ReactGridLayout.
  */
-export default class GridItem extends React.Component<RGLGridItemProps, State> {
+export class RGLGridItem extends React.Component<RGLGridItemProps, State> {
 	static propTypes = RGLGridItemPropTypes;
 
 	static defaultProps: DefaultProps = {
@@ -54,7 +51,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		className: ""
 	};
 
-	elementRef: ReactRef<HTMLDivElement> = React.createRef();
+	elementRef: RGLReactRef<HTMLDivElement> = React.createRef();
 
 	shouldComponentUpdate (nextProps: RGLGridItemProps, nextState: State): boolean {
 		// We can't deeply compare children. If the developer memoizes them, we can
@@ -62,7 +59,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		if (this.props.children !== nextProps.children) return true
 		if (this.props.droppingPosition !== nextProps.droppingPosition) return true
 		// TODO memoize these calculations so they don't take so long?
-		const oldPosition = calcGridItemPosition(
+		const oldPosition = rglCalcGridItemPosition(
 			this.getPositionParams(this.props),
 			this.props.x,
 			this.props.y,
@@ -70,7 +67,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 			this.props.h,
 			this.state
 		)
-		const newPosition = calcGridItemPosition(
+		const newPosition = rglCalcGridItemPosition(
 			this.getPositionParams(nextProps),
 			nextProps.x,
 			nextProps.y,
@@ -129,7 +126,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		}
 	}
 
-	getPositionParams (props: Props = this.props): PositionParams {
+	getPositionParams (props: Props = this.props): RGLPositionParams {
 		return {
 			cols: props.cols,
 			containerPadding: props.containerPadding,
@@ -150,7 +147,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 * @param  {Object} pos Position object with width, height, left, top.
 	 * @return {Object}     Style object.
 	 */
-	createStyle (pos: Position): { [key: string]: string | undefined } {
+	createStyle (pos: RGLPosition): { [key: string]: string | undefined } {
 		const { usePercentages, containerWidth, useCSSTransforms } = this.props
 
 		let style
@@ -207,7 +204,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 */
 	mixinResizable (
 		child: ReactElement<any>,
-		position: Position,
+		position: RGLPosition,
 		isResizable: boolean
 	): ReactElement<any> {
 		const {
@@ -224,7 +221,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		const positionParams = this.getPositionParams()
 
 		// This is the max possible width - doesn't go to infinity because of the width of the window
-		const maxWidth = calcGridItemPosition(
+		const maxWidth = rglCalcGridItemPosition(
 			positionParams,
 			0,
 			0,
@@ -233,8 +230,8 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		).width
 
 		// Calculate min/max constraints using our min & maxes
-		const mins = calcGridItemPosition(positionParams, 0, 0, minW, minH)
-		const maxes = calcGridItemPosition(positionParams, 0, 0, maxW, maxH)
+		const mins = rglCalcGridItemPosition(positionParams, 0, 0, minW, minH)
+		const maxes = rglCalcGridItemPosition(positionParams, 0, 0, maxW, maxH)
 		const minConstraints: [number, number] = [mins.width, mins.height]
 		const maxConstraints: [number, number] = [
 			Math.min(maxes.width, maxWidth),
@@ -267,7 +264,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		const { onDragStart, transformScale } = this.props
 		if (!onDragStart) return
 
-		const newPosition: PartialPosition = { top: 0, left: 0 }
+		const newPosition: RGLPartialPosition = { top: 0, left: 0 }
 
 		// TODO: this wont work on nested parents
 		const { offsetParent } = node
@@ -283,7 +280,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		this.setState({ dragging: newPosition })
 
 		// Call callback with this data
-		const { x, y } = calcXY(
+		const { x, y } = rglCalcXY(
 			this.getPositionParams(),
 			newPosition.top,
 			newPosition.left,
@@ -305,7 +302,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 */
 	onDrag = (
 		e: SyntheticEvent | DraggableEvent,
-		{ node, deltaX, deltaY }: ReactDraggableCallbackData
+		{ node, deltaX, deltaY }: RGLReactDraggableCallbackData
 	) => {
 		const { onDrag } = this.props
 		if (!onDrag) return
@@ -326,21 +323,21 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 			if (offsetParent) {
 				const { margin, rowHeight } = this.props
 				const bottomBoundary =
-					offsetParent.clientHeight - calcGridItemWHPx(h, rowHeight, margin[1])
-				top = clamp(top, 0, bottomBoundary)
+					offsetParent.clientHeight - rglCalcGridItemWHPx(h, rowHeight, margin[1])
+				top = rglClamp(top, 0, bottomBoundary)
 
-				const colWidth = calcGridColWidth(positionParams)
+				const colWidth = rglCalcGridColWidth(positionParams)
 				const rightBoundary =
-					containerWidth - calcGridItemWHPx(w, colWidth, margin[0])
-				left = clamp(left, 0, rightBoundary)
+					containerWidth - rglCalcGridItemWHPx(w, colWidth, margin[0])
+				left = rglClamp(left, 0, rightBoundary)
 			}
 		}
 
-		const newPosition: PartialPosition = { top, left }
+		const newPosition: RGLPartialPosition = { top, left }
 		this.setState({ dragging: newPosition })
 
 		// Call callback with this data
-		const { x, y } = calcXY(positionParams, top, left, w, h)
+		const { x, y } = rglCalcXY(positionParams, top, left, w, h)
 		return onDrag.call(this, i, x, y, {
 			e,
 			node,
@@ -351,7 +348,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	/**
 	 * onDragStop event handler
 	 */
-	onDragStop = (e: SyntheticEvent | DraggableEvent, { node }: ReactDraggableCallbackData) => {
+	onDragStop = (e: SyntheticEvent | DraggableEvent, { node }: RGLReactDraggableCallbackData) => {
 		const { onDragStop } = this.props
 		if (!onDragStop) return
 
@@ -360,10 +357,10 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		}
 		const { w, h, i } = this.props
 		const { left, top } = this.state.dragging
-		const newPosition: PartialPosition = { top, left }
+		const newPosition: RGLPartialPosition = { top, left }
 		this.setState({ dragging: null })
 
-		const { x, y } = calcXY(this.getPositionParams(), top, left, w, h)
+		const { x, y } = rglCalcXY(this.getPositionParams(), top, left, w, h)
 
 		return onDragStop.call(this, i, x, y, {
 			e,
@@ -379,7 +376,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 */
 	onResizeStop = (
 		e: SyntheticEvent,
-		callbackData: { node: HTMLElement, size: Pick<Position, 'width' | 'height'> }
+		callbackData: { node: HTMLElement, size: Pick<RGLPosition, 'width' | 'height'> }
 	) => {
 		this.onResizeHandler(e, callbackData, "onResizeStop")
 	};
@@ -391,7 +388,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 */
 	onResizeStart = (
 		e: SyntheticEvent,
-		callbackData: { node: HTMLElement, size: Pick<Position, 'width' | 'height'> }
+		callbackData: { node: HTMLElement, size: Pick<RGLPosition, 'width' | 'height'> }
 	) => {
 		this.onResizeHandler(e, callbackData, "onResizeStart")
 	};
@@ -405,7 +402,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		e: SyntheticEvent,
 		callbackData: {
 			node: HTMLElement
-			size: Pick<Position, 'width' | 'height'>
+			size: Pick<RGLPosition, 'width' | 'height'>
 		}
 	) => {
 		this.onResizeHandler(e, callbackData, "onResize")
@@ -421,7 +418,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 	 */
 	onResizeHandler (
 		e: React.SyntheticEvent,
-		{ node, size }: { node: HTMLElement, size: Pick<Position, 'width' | 'height'> },
+		{ node, size }: { node: HTMLElement, size: Pick<RGLPosition, 'width' | 'height'> },
 		handlerName: 'onResizeStart' | 'onResizeStop' | 'onResize'
 	): void {
 		const handler = this.props[handlerName]
@@ -430,7 +427,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		let { minW, maxW } = this.props
 
 		// Get new XY
-		let { w, h } = calcWH(
+		let { w, h } = rglCalcWH(
 			this.getPositionParams(),
 			size.width,
 			size.height,
@@ -445,8 +442,8 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		maxW = Math.min(maxW, cols - x)
 
 		// Min/max capping
-		w = clamp(w, minW, maxW)
-		h = clamp(h, minH, maxH)
+		w = rglClamp(w, minW, maxW)
+		h = rglClamp(h, minH, maxH)
 
 		this.setState({ resizing: handlerName === "onResizeStop" ? null : size })
 
@@ -465,7 +462,7 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 			useCSSTransforms
 		} = this.props
 
-		const pos = calcGridItemPosition(
+		const pos = rglCalcGridItemPosition(
 			this.getPositionParams(),
 			x,
 			y,
@@ -508,3 +505,4 @@ export default class GridItem extends React.Component<RGLGridItemProps, State> {
 		return newChild
 	}
 }
+export default RGLGridItem

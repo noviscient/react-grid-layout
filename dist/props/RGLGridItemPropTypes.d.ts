@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { ReactElement } from 'react';
-import { DroppingPosition, GridDragEvent, GridItemCallback, GridResizeEvent } from './RGLExtraTypes';
-import { ResizeHandle, ResizeHandleAxis } from './RGLPropTypes';
+import { RGLDroppingPosition, RGLGridDragEvent, RGLGridItemCallback, RGLGridResizeEvent } from './RGLExtraTypes';
+import { RGLResizeHandle, RGLResizeHandleAxis } from './RGLPropTypes';
 declare const RGLGridItemPropTypes: {
     children: PropTypes.Requireable<PropTypes.ReactElementLike>;
     cols: PropTypes.Validator<number>;
@@ -19,7 +19,7 @@ declare const RGLGridItemPropTypes: {
     minH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
     maxH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
     i: PropTypes.Validator<string>;
-    resizeHandles: PropTypes.Requireable<(ResizeHandleAxis | null | undefined)[]>;
+    resizeHandles: PropTypes.Requireable<(RGLResizeHandleAxis | null | undefined)[]>;
     resizeHandle: PropTypes.Requireable<string | number | boolean | PropTypes.ReactElementLike | PropTypes.ReactNodeArray | ((...args: any[]) => any)>;
     onDragStop: PropTypes.Requireable<(...args: any[]) => any>;
     onDragStart: PropTypes.Requireable<(...args: any[]) => any>;
@@ -58,7 +58,7 @@ export declare type RGLGridItemProps = {
     useCSSTransforms?: boolean;
     usePercentages?: boolean;
     transformScale: number;
-    droppingPosition?: DroppingPosition;
+    droppingPosition?: RGLDroppingPosition;
     className: string;
     style?: Object;
     cancel: string;
@@ -72,14 +72,14 @@ export declare type RGLGridItemProps = {
     minH: number;
     maxH: number;
     i: string;
-    resizeHandles?: ResizeHandleAxis[];
-    resizeHandle?: ResizeHandle;
-    onDrag?: GridItemCallback<GridDragEvent>;
-    onDragStart?: GridItemCallback<GridDragEvent>;
-    onDragStop?: GridItemCallback<GridDragEvent>;
-    onResize?: GridItemCallback<GridResizeEvent>;
-    onResizeStart?: GridItemCallback<GridResizeEvent>;
-    onResizeStop?: GridItemCallback<GridResizeEvent>;
+    resizeHandles?: RGLResizeHandleAxis[];
+    resizeHandle?: RGLResizeHandle;
+    onDrag?: RGLGridItemCallback<RGLGridDragEvent>;
+    onDragStart?: RGLGridItemCallback<RGLGridDragEvent>;
+    onDragStop?: RGLGridItemCallback<RGLGridDragEvent>;
+    onResize?: RGLGridItemCallback<RGLGridResizeEvent>;
+    onResizeStart?: RGLGridItemCallback<RGLGridResizeEvent>;
+    onResizeStop?: RGLGridItemCallback<RGLGridResizeEvent>;
 };
 export declare type RGLGridItemState = {
     resizing?: {
