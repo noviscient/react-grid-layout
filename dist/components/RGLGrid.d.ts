@@ -11,7 +11,7 @@ declare type State = {
     oldResizeItem?: RGLLayoutItem | null;
     droppingDOMNode?: ReactElement<any> | null;
     droppingPosition?: RGLDroppingPosition | null;
-    children: React.ReactElement[];
+    children: React.ReactChild[];
     compactType?: RGLCompactType;
     propsLayout?: RGLLayoutItemList;
     rect?: DOMRect | null;
@@ -115,7 +115,7 @@ export declare class RGLGrid extends React.Component<Props, State> {
      * @param  {Element} child React element.
      * @return {Element}       Element wrapped in draggable and properly placed.
      */
-    processGridItem(child: ReactElement<any>, isDroppingItem?: boolean): null | ReactElement<any>;
+    processGridItem(child: React.ReactChild, isDroppingItem?: boolean): null | ReactElement<any>;
     onDragOver: React.EventHandler<React.DragEvent>;
     removeDroppingPlaceholder: () => void;
     onDragLeave: React.DragEventHandler;

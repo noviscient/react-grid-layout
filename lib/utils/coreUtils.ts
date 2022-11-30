@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual'
-import React, { ReactChildren } from 'react'
+import React, { ReactChildren, ReactElement } from 'react'
 import { RGLCompactType, RGLLayoutItemList, RGLLayoutItem, RGLPosition } from '../props/RGLExtraTypes'
 
 const isProduction = process.env.NODE_ENV === "production"
@@ -84,10 +84,11 @@ function cloneLayoutItem (layoutItem: RGLLayoutItem): RGLLayoutItem {
  * Comparing React `children` is a bit difficult. This is a good way to compare them.
  * This will catch differences in keys, order, and length.
  */
-function childrenEqual (a: React.ReactElement[], b: React.ReactElement[]): boolean {
+function childrenEqual (a: React.ReactChild[], b: React.ReactChild[]): boolean {
 	return isEqual(
-		React.Children.map(a, c => c?.key),
-		React.Children.map(b, c => c?.key)
+		// expects children to be elements, should fix the typing
+		React.Children.map(a, c => (c as ReactElement)?.key),
+		React.Children.map(b, c => (c as ReactElement)?.key)
 	)
 }
 
@@ -605,7 +606,7 @@ function sortLayoutItemsByColRow (layout: RGLLayoutItemList): RGLLayoutItemList 
  */
 function synchronizeLayoutWithChildren (
 	initialLayout: RGLLayoutItemList,
-	children: React.ReactElement[],
+	children: React.ReactNode[],
 	cols: number,
 	compactType: RGLCompactType | null,
 	allowOverlap: boolean | undefined
@@ -614,7 +615,7 @@ function synchronizeLayoutWithChildren (
 
 	// Generate one layout item per child.
 	const layout: RGLLayoutItem[] = []
-	React.Children.forEach(children, (child: React.ReactElement<any>) => {
+	React.Children.forEach(children as ReactElement[], (child: React.ReactElement<any>) => {
 		// Child may not exist
 		if (child?.key == null) return
 

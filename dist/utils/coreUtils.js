@@ -91,7 +91,9 @@ function cloneLayoutItem(layoutItem) {
  * This will catch differences in keys, order, and length.
  */
 function childrenEqual(a, b) {
-    return (0, isEqual_1["default"])(react_1["default"].Children.map(a, function (c) { return c === null || c === void 0 ? void 0 : c.key; }), react_1["default"].Children.map(b, function (c) { return c === null || c === void 0 ? void 0 : c.key; }));
+    return (0, isEqual_1["default"])(
+    // expects children to be elements, should fix the typing
+    react_1["default"].Children.map(a, function (c) { var _a; return (_a = c) === null || _a === void 0 ? void 0 : _a.key; }), react_1["default"].Children.map(b, function (c) { var _a; return (_a = c) === null || _a === void 0 ? void 0 : _a.key; }));
 }
 // Like the above, but a lot simpler.
 function fastPositionEqual(a, b) {

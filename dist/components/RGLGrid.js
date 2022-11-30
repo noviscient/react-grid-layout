@@ -504,7 +504,7 @@ var RGLGrid = /** @class */ (function (_super) {
      * @return {Element}       Element wrapped in draggable and properly placed.
      */
     RGLGrid.prototype.processGridItem = function (child, isDroppingItem) {
-        if (!child || !child.key)
+        if (!child || typeof child !== 'object' || !('key' in child) || !child.key)
             return null;
         var l = getLayoutItem(this.state.layout, String(child.key));
         if (!l)

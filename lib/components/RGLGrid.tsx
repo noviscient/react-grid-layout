@@ -35,7 +35,7 @@ type State = {
 	droppingDOMNode?: ReactElement<any> | null,
 	droppingPosition?: RGLDroppingPosition | null,
 	// Mirrored props
-	children: React.ReactElement[],
+	children: React.ReactChild[],
 	compactType?: RGLCompactType,
 	propsLayout?: RGLLayoutItemList,
 	rect?: DOMRect | null
@@ -149,7 +149,7 @@ export class RGLGrid extends React.Component<Props, State> {
 			nextProps.compactType !== prevState.compactType
 		) {
 			newLayoutBase = nextProps.layout
-		} else if (!childrenEqual(nextProps.children, prevState.children)) {
+		} else if (!childrenEqual(nextProps.children as ReactElement[], prevState.children)) {
 			// If children change, also regenerate the layout. Use our state
 			// as the base in case because it may be more up to date than
 			// what is in props.
@@ -522,10 +522,10 @@ export class RGLGrid extends React.Component<Props, State> {
 	 * @return {Element}       Element wrapped in draggable and properly placed.
 	 */
 	processGridItem (
-		child: ReactElement<any>,
+		child: React.ReactChild,
 		isDroppingItem?: boolean
 	): null | ReactElement<any> {
-		if (!child || !child.key) return null
+		if (!child || typeof child !== 'object' || !('key' in child) || !child.key) return null
 		const l = getLayoutItem(this.state.layout, String(child.key))
 		if (!l) return null
 		const {

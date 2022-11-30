@@ -88,7 +88,7 @@ export type RGLGridProps = {
 	onResizeStop: RGLEventCallback,
 	onDropDragOver?: (e: React.DragEvent) => (Partial<RGLLayoutItem> | false),
 	onDrop: (layout: RGLLayoutItemList, item: RGLLayoutItem | undefined, e: React.DragEvent) => void,
-	children: React.ReactElement[],
+	children: React.ReactChild[],
 	innerRef?: React.RefObject<HTMLDivElement>
 };
 

@@ -15,7 +15,7 @@ declare function cloneLayoutItem(layoutItem: RGLLayoutItem): RGLLayoutItem;
  * Comparing React `children` is a bit difficult. This is a good way to compare them.
  * This will catch differences in keys, order, and length.
  */
-declare function childrenEqual(a: React.ReactElement[], b: React.ReactElement[]): boolean;
+declare function childrenEqual(a: React.ReactChild[], b: React.ReactChild[]): boolean;
 declare function fastPositionEqual(a: RGLPosition, b: RGLPosition): boolean;
 /**
  * Given two layoutitems, check if they collide.
@@ -153,7 +153,7 @@ declare function sortLayoutItemsByColRow(layout: RGLLayoutItemList): RGLLayoutIt
  * @param  {?String} compact      Compaction option.
  * @return {Array}                Working layout.
  */
-declare function synchronizeLayoutWithChildren(initialLayout: RGLLayoutItemList, children: React.ReactElement[], cols: number, compactType: RGLCompactType | null, allowOverlap: boolean | undefined): RGLLayoutItemList;
+declare function synchronizeLayoutWithChildren(initialLayout: RGLLayoutItemList, children: React.ReactNode[], cols: number, compactType: RGLCompactType | null, allowOverlap: boolean | undefined): RGLLayoutItemList;
 /**
  * Validate a layout. Throws errors.
  *
