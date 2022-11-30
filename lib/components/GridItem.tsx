@@ -1,4 +1,3 @@
-// @flow
 import clsx from "clsx"
 import type { ReactElement, ReactNode, SyntheticEvent } from "react"
 import React from "react"
@@ -7,7 +6,7 @@ import { Resizable, ResizeCallbackData } from 'react-resizable'
 import {
 	calcGridColWidth, calcGridItemPosition,
 	calcGridItemWHPx, calcWH, calcXY, clamp, PositionParams
-} from '../calculateUtils'
+} from '../utils/calculateUtils'
 import type {
 	PartialPosition,
 	Position, ReactDraggableCallbackData
@@ -16,7 +15,7 @@ import RGLGridItemPropTypes, { RGLGridItemProps, RGLGridItemState } from '../RGL
 import type {
 	ReactRef
 } from '../RGLPropTypes'
-import { fastPositionEqual, perc, setTopLeft, setTransform } from '../utils'
+import { fastPositionEqual, perc, setTopLeft, setTransform } from '../utils/coreUtils'
 
 type State = RGLGridItemState
 type Props = RGLGridItemProps

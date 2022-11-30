@@ -5,13 +5,13 @@ export type DragOverEvent = MouseEvent & {
 	nativeEvent: {
 		layerX: number,
 		layerY: number,
-	} & Event
+	} & MouseEvent
 }
 
 export type EventCallback = (
 	layout: Layout,
-	oldItem?: LayoutItem,
-	newItem?: LayoutItem,
+	oldItem?: LayoutItem | null,
+	newItem?: LayoutItem | null,
 	placeholder?: LayoutItem | null,
 	event?: SyntheticEvent | DraggableEvent,
    element?: HTMLElement
@@ -45,7 +45,7 @@ export type Position = {
 	height: number
 }
 export type PartialPosition = { left: number, top: number }
-export type DroppingPosition = { left: number, top: number, e: SyntheticEvent }
+export type DroppingPosition = { left: number, top: number, e: SyntheticEvent | DragOverEvent }
 export type Size = { width: number, height: number }
 export type GridDragEvent = {
 	e: React.SyntheticEvent | DraggableEvent,

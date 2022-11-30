@@ -1,6 +1,6 @@
 import isEqual from 'lodash/isEqual'
 import React, { ReactChildren } from 'react'
-import { CompactType, Layout, LayoutItem, Position } from './RGLExtraTypes'
+import { CompactType, Layout, LayoutItem, Position } from '../RGLExtraTypes'
 
 const isProduction = process.env.NODE_ENV === "production"
 const DEBUG = false
@@ -695,7 +695,7 @@ export function validateLayout (
 
 // Legacy support for verticalCompact: false
 export function compactType (
-	props?: { verticalCompact: boolean, compactType: CompactType }
+	props?: { verticalCompact: boolean, compactType: CompactType | null }
 ): CompactType | null {
 	const { verticalCompact, compactType } = props || {}
 	return verticalCompact === false ? null : compactType

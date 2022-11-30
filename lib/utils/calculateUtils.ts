@@ -1,5 +1,5 @@
-import type { Position } from './RGLExtraTypes'
-import { RGLGridItemState } from './RGLGridItemPropTypes'
+import type { Position } from '../RGLExtraTypes'
+import { RGLGridItemState } from '../RGLGridItemPropTypes'
 
 export type PositionParams = {
 	margin: [number, number],

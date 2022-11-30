@@ -74,7 +74,7 @@ export type RGLGridProps = {
 	preventCollision: boolean,
 	useCSSTransforms: boolean,
 	transformScale: number,
-	droppingItem?: Pick<LayoutItem, 'w' | 'h' | 'i'>,
+	droppingItem: Pick<LayoutItem, 'i' | 'w' | 'h'> & Partial<Omit<LayoutItem, 'i' | 'w' | 'h'>>,
 	resizeHandles: ResizeHandleAxis[],
 	resizeHandle ?: ResizeHandle,
 	allowOverlap: boolean,
@@ -86,8 +86,8 @@ export type RGLGridProps = {
 	onResize: EventCallback,
 	onResizeStart: EventCallback,
 	onResizeStop: EventCallback,
-	onDropDragOver?: (e: DragOverEvent) => ({ w?: number, h?: number } | false),
-	onDrop: (layout: Layout, item: LayoutItem | undefined, e: Event) => void,
+	onDropDragOver?: (e: React.DragEvent) => (Partial<LayoutItem> | false),
+	onDrop: (layout: Layout, item: LayoutItem | undefined, e: React.DragEvent) => void,
 	children: React.ReactElement[],
 	innerRef?: React.RefObject<HTMLDivElement>
 };
