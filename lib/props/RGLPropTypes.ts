@@ -14,6 +14,7 @@ import type {
 	RGLLayoutItemList,
 	RGLLayoutItem
 } from "./RGLExtraTypes"
+import rglCoreUtils from '../utils/coreUtils'
 
 // util
 export type RGLReactRef<T extends HTMLElement> = { current: T | null }
@@ -144,7 +145,7 @@ const RGLPropTypes = {
 		var layout = props.layout
 		// I hope you're setting the data-grid property on the grid items
 		if (layout === undefined) return
-		require("./utils").validateLayout(layout, "layout")
+		rglCoreUtils.validateLayout(layout, "layout")
 	},
 
 	//

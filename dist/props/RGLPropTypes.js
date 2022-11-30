@@ -7,6 +7,7 @@ exports.rglResizeHandleType = exports.rglResizeHandleAxesType = void 0;
 // @flow
 var prop_types_1 = __importDefault(require("prop-types"));
 var react_1 = __importDefault(require("react"));
+var coreUtils_1 = __importDefault(require("../utils/coreUtils"));
 // Defines which resize handles should be rendered (default: 'se')
 // Allows for any combination of:
 // 's' - South handle (bottom-center)
@@ -60,7 +61,7 @@ var RGLPropTypes = {
         // I hope you're setting the data-grid property on the grid items
         if (layout === undefined)
             return;
-        require("./utils").validateLayout(layout, "layout");
+        coreUtils_1["default"].validateLayout(layout, "layout");
     },
     //
     // Grid Dimensions
