@@ -5,6 +5,8 @@
 		"declaration": true,
 		"esModuleInterop": true,
 		"jsx": "react",
-		"outDir": "./dist"
-	}
+		"outDir": "dist"
+	},
+	"include": ["lib/**/*.ts"],
+	"exclude": ["dist"]
 }
