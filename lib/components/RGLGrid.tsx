@@ -658,8 +658,8 @@ export class RGLGrid extends React.Component<Props, State> {
 		const applicableMaxWidth: number = typeof finalDroppingItem.maxW === 'number' ? finalDroppingItem.maxW : Infinity
 		const applicableMinWidth: number = typeof finalDroppingItem.minW === 'number' ? finalDroppingItem.minW : 0
 		
-		const w = Math.min(applicableMaxWidth, Math.max(applicableMinWidth, finalDroppingItem.w)) * ((this.props.width ?? 0) / (this.props.cols ?? 1)) / 2
-		const h = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * (this.props.rowHeight ?? 0) / 2
+		const halfW = Math.min(applicableMaxWidth, Math.max(applicableMinWidth, finalDroppingItem.w)) * ((this.props.width ?? 0) / (this.props.cols ?? 1)) / 2
+		const halfH = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * (this.props.rowHeight ?? 0) / 2
 
 		if (!this.state.rect) return
 
@@ -667,8 +667,8 @@ export class RGLGrid extends React.Component<Props, State> {
 		const actualLayerY = pageY - this.state.rect.y
 
 		const droppingPosition: RGLDroppingPosition = {
-			left: actualLayerX / transformScale,
-			top: actualLayerY / transformScale,
+			left: (actualLayerX - halfW) / transformScale,
+			top: (actualLayerY - halfH) / transformScale,
 			e
 		}
 		// const droppingPosition = {
