@@ -2,14 +2,14 @@ import PropTypes from "prop-types";
 import React from "react";
 import type { ReactNode } from "react";
 import type { RGLEventCallback, RGLCompactType, RGLLayoutItemList, RGLLayoutItem } from "./RGLExtraTypes";
-export declare type RGLReactRef<T extends HTMLElement> = {
+export type RGLReactRef<T extends HTMLElement> = {
     current: T | null;
 };
-export declare type RGLResizeHandleAxis = "s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne";
-export declare type RGLResizeHandle = ReactNode | ((resizeHandleAxis: RGLResizeHandleAxis, ref: RGLReactRef<HTMLElement>) => ReactNode);
+export type RGLResizeHandleAxis = "s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne";
+export type RGLResizeHandle = ReactNode | ((resizeHandleAxis: RGLResizeHandleAxis, ref: RGLReactRef<HTMLElement>) => ReactNode);
 export declare const rglResizeHandleAxesType: PropTypes.Requireable<(RGLResizeHandleAxis | null | undefined)[]>;
-export declare const rglResizeHandleType: PropTypes.Requireable<string | number | boolean | PropTypes.ReactElementLike | PropTypes.ReactNodeArray | ((...args: any[]) => any)>;
-export declare type RGLGridProps = {
+export declare const rglResizeHandleType: PropTypes.Requireable<NonNullable<PropTypes.ReactNodeLike | ((...args: any[]) => any)>>;
+export type RGLGridProps = {
     className: string;
     style: React.CSSProperties;
     width: number;
@@ -47,7 +47,7 @@ export declare type RGLGridProps = {
     children: React.ReactChild[];
     innerRef?: React.RefObject<HTMLDivElement>;
 };
-export declare type RGLDefaultProps = Omit<RGLGridProps, 'children' | 'width'>;
+export type RGLDefaultProps = Omit<RGLGridProps, 'children' | 'width'>;
 declare const RGLPropTypes: {
     className: PropTypes.Requireable<string>;
     style: PropTypes.Requireable<object>;
@@ -72,7 +72,7 @@ declare const RGLPropTypes: {
     transformScale: PropTypes.Requireable<number>;
     isDroppable: PropTypes.Requireable<boolean>;
     resizeHandles: PropTypes.Requireable<(RGLResizeHandleAxis | null | undefined)[]>;
-    resizeHandle: PropTypes.Requireable<string | number | boolean | PropTypes.ReactElementLike | PropTypes.ReactNodeArray | ((...args: any[]) => any)>;
+    resizeHandle: PropTypes.Requireable<NonNullable<PropTypes.ReactNodeLike | ((...args: any[]) => any)>>;
     onLayoutChange: PropTypes.Requireable<(...args: any[]) => any>;
     onDragStart: PropTypes.Requireable<(...args: any[]) => any>;
     onDrag: PropTypes.Requireable<(...args: any[]) => any>;

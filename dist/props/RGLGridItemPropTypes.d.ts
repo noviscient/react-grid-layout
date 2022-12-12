@@ -20,7 +20,7 @@ declare const RGLGridItemPropTypes: {
     maxH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
     i: PropTypes.Validator<string>;
     resizeHandles: PropTypes.Requireable<(RGLResizeHandleAxis | null | undefined)[]>;
-    resizeHandle: PropTypes.Requireable<string | number | boolean | PropTypes.ReactElementLike | PropTypes.ReactNodeArray | ((...args: any[]) => any)>;
+    resizeHandle: PropTypes.Requireable<NonNullable<PropTypes.ReactNodeLike | ((...args: any[]) => any)>>;
     onDragStop: PropTypes.Requireable<(...args: any[]) => any>;
     onDragStart: PropTypes.Requireable<(...args: any[]) => any>;
     onDrag: PropTypes.Requireable<(...args: any[]) => any>;
@@ -43,7 +43,7 @@ declare const RGLGridItemPropTypes: {
     }>>;
 };
 export default RGLGridItemPropTypes;
-export declare type RGLGridItemProps = {
+export type RGLGridItemProps = {
     children: ReactElement<any>;
     cols: number;
     containerWidth: number;
@@ -81,7 +81,7 @@ export declare type RGLGridItemProps = {
     onResizeStart?: RGLGridItemCallback<RGLGridResizeEvent>;
     onResizeStop?: RGLGridItemCallback<RGLGridResizeEvent>;
 };
-export declare type RGLGridItemState = {
+export type RGLGridItemState = {
     resizing?: {
         width: number;
         height: number;

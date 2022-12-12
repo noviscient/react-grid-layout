@@ -5,9 +5,9 @@ import type { RGLPosition, RGLReactDraggableCallbackData } from '../props/RGLExt
 import { RGLGridItemProps, RGLGridItemState } from '../props/RGLGridItemPropTypes';
 import type { RGLReactRef } from '../props/RGLPropTypes';
 import { RGLPositionParams } from '../utils/calculateUtils';
-declare type State = RGLGridItemState;
-declare type Props = RGLGridItemProps;
-declare type DefaultProps = {
+type State = RGLGridItemState;
+type Props = RGLGridItemProps;
+type DefaultProps = {
     className: string;
     cancel: string;
     handle: string;
@@ -39,7 +39,7 @@ export declare class RGLGridItem extends React.Component<RGLGridItemProps, State
         maxH: (props: RGLGridItemProps, propName: keyof RGLGridItemProps) => Error | undefined;
         i: import("prop-types").Validator<string>;
         resizeHandles: import("prop-types").Requireable<(import("../props/RGLPropTypes").RGLResizeHandleAxis | null | undefined)[]>;
-        resizeHandle: import("prop-types").Requireable<string | number | boolean | import("prop-types").ReactElementLike | import("prop-types").ReactNodeArray | ((...args: any[]) => any)>;
+        resizeHandle: import("prop-types").Requireable<NonNullable<import("prop-types").ReactNodeLike | ((...args: any[]) => any)>>;
         onDragStop: import("prop-types").Requireable<(...args: any[]) => any>;
         onDragStart: import("prop-types").Requireable<(...args: any[]) => any>;
         onDrag: import("prop-types").Requireable<(...args: any[]) => any>;

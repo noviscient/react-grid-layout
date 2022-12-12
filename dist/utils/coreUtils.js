@@ -93,7 +93,7 @@ function cloneLayoutItem(layoutItem) {
 function childrenEqual(a, b) {
     return (0, isEqual_1["default"])(
     // expects children to be elements, should fix the typing
-    react_1["default"].Children.map(a, function (c) { var _a; return (_a = c) === null || _a === void 0 ? void 0 : _a.key; }), react_1["default"].Children.map(b, function (c) { var _a; return (_a = c) === null || _a === void 0 ? void 0 : _a.key; }));
+    react_1["default"].Children.map(a, function (c) { return c === null || c === void 0 ? void 0 : c.key; }), react_1["default"].Children.map(b, function (c) { return c === null || c === void 0 ? void 0 : c.key; }));
 }
 // Like the above, but a lot simpler.
 function fastPositionEqual(a, b) {
@@ -315,7 +315,7 @@ function moveElement(layout, l, x, y, isUserAction, preventCollision, compactTyp
     // Short-circuit if nothing to do.
     if (l.y === y && l.x === x)
         return layout;
-    log("Moving element " + l.i + " to [" + String(x) + "," + String(y) + "] from [" + l.x + "," + l.y + "]");
+    log("Moving element ".concat(l.i, " to [").concat(String(x), ",").concat(String(y), "] from [").concat(l.x, ",").concat(l.y, "]"));
     var oldX = l.x;
     var oldY = l.y;
     // This is quite a bit faster than extending the object
@@ -350,7 +350,7 @@ function moveElement(layout, l, x, y, isUserAction, preventCollision, compactTyp
         // If we are preventing collision but not allowing overlap, we need to
         // revert the position of this element so it goes to where it came from, rather
         // than the user's desired location.
-        log("Collision prevented on " + l.i + ", reverting.");
+        log("Collision prevented on ".concat(l.i, ", reverting."));
         l.x = oldX;
         l.y = oldY;
         l.moved = false;
@@ -359,7 +359,7 @@ function moveElement(layout, l, x, y, isUserAction, preventCollision, compactTyp
     // Move each item that collides away from this element.
     for (var i = 0, len = collisions.length; i < len; i++) {
         var collision = collisions[i];
-        log("Resolving collision between " + l.i + " at [" + l.x + "," + l.y + "] and " + collision.i + " at [" + collision.x + "," + collision.y + "]");
+        log("Resolving collision between ".concat(l.i, " at [").concat(l.x, ",").concat(l.y, "] and ").concat(collision.i, " at [").concat(collision.x, ",").concat(collision.y, "]"));
         // Short circuit so we can't infinite loop
         if (collision.moved)
             continue;
@@ -402,7 +402,7 @@ function moveElementAwayFromCollision(layout, collidesWith, itemToMove, isUserAc
         };
         // No collision? If so, we can go up there; otherwise, we'll end up moving down as normal
         if (!getFirstCollision(layout, fakeItem)) {
-            log("Doing reverse collision on " + itemToMove.i + " up to [" + fakeItem.x + "," + fakeItem.y + "].");
+            log("Doing reverse collision on ".concat(itemToMove.i, " up to [").concat(fakeItem.x, ",").concat(fakeItem.y, "]."));
             return moveElement(layout, itemToMove, compactH ? fakeItem.x : undefined, compactV ? fakeItem.y : undefined, isUserAction, preventCollision, compactType, cols, undefined);
         }
     }
@@ -420,25 +420,25 @@ function perc(num) {
 function setTransform(_a) {
     var top = _a.top, left = _a.left, width = _a.width, height = _a.height;
     // Replace unitless items with px
-    var translate = "translate(" + left + "px," + top + "px)";
+    var translate = "translate(".concat(left, "px,").concat(top, "px)");
     return {
         transform: translate,
         WebkitTransform: translate,
         MozTransform: translate,
         msTransform: translate,
         OTransform: translate,
-        width: width + "px",
-        height: height + "px",
+        width: "".concat(width, "px"),
+        height: "".concat(height, "px"),
         position: "absolute"
     };
 }
 function setTopLeft(_a) {
     var top = _a.top, left = _a.left, width = _a.width, height = _a.height;
     return {
-        top: top + "px",
-        left: left + "px",
-        width: width + "px",
-        height: height + "px",
+        top: "".concat(top, "px"),
+        left: "".concat(left, "px"),
+        width: "".concat(width, "px"),
+        height: "".concat(height, "px"),
         position: "absolute"
     };
 }

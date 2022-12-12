@@ -4,13 +4,13 @@ import { ResponsiveLayout, OnLayoutChangeCallback, BreakpointWidthsMap, DefaultB
 import ReactGridLayout from './RGLGrid';
 import { RGLLayoutItemList } from '../props/RGLExtraTypes';
 import { RGLGridProps } from '../props/RGLPropTypes';
-declare type State<B extends string = DefaultBreakpoints> = {
+type State<B extends string = DefaultBreakpoints> = {
     layout: RGLLayoutItemList;
     breakpoint: B;
     cols: number;
     layouts?: ResponsiveLayout<B>;
 };
-declare type Props<B extends string = DefaultBreakpoints> = Omit<RGLGridProps, 'cols'> & {
+type Props<B extends string = DefaultBreakpoints> = Omit<RGLGridProps, 'cols'> & {
     breakpoint?: B;
     breakpoints: BreakpointWidthsMap<B>;
     cols: BreakpointWidthsMap<B>;
@@ -26,17 +26,17 @@ declare type Props<B extends string = DefaultBreakpoints> = Omit<RGLGridProps, '
     onLayoutChange: OnLayoutChangeCallback;
     onWidthChange: (containerWidth: number, margin: [number, number], cols: number, containerPadding: null | [number, number]) => void;
 };
-declare type ResponsiveColsSpec<B extends string = DefaultBreakpoints> = {
+type ResponsiveColsSpec<B extends string = DefaultBreakpoints> = {
     cols: {
         [k in B]?: number | null;
     };
 };
-declare type ResponsiveContainerPaddingSpec<B extends string = DefaultBreakpoints> = {
+type ResponsiveContainerPaddingSpec<B extends string = DefaultBreakpoints> = {
     containerPadding: {
         [k in B]?: [number, number] | null;
     };
 };
-declare type DefaultProps<B extends string = DefaultBreakpoints> = Pick<Props, 'allowOverlap' | 'breakpoints' | 'layouts' | 'margin' | 'onBreakpointChange' | 'onLayoutChange' | 'onWidthChange'> & ResponsiveColsSpec<B> & ResponsiveContainerPaddingSpec<B>;
+type DefaultProps<B extends string = DefaultBreakpoints> = Pick<Props, 'allowOverlap' | 'breakpoints' | 'layouts' | 'margin' | 'onBreakpointChange' | 'onLayoutChange' | 'onWidthChange'> & ResponsiveColsSpec<B> & ResponsiveContainerPaddingSpec<B>;
 export declare class RGLResponsiveGrid<B extends string = DefaultBreakpoints> extends React.Component<Props<B>, State<B>> {
     static propTypes: {
         breakpoint: PropTypes.Requireable<string>;

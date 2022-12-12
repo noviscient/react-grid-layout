@@ -1,6 +1,6 @@
 import type { RGLPosition } from '../props/RGLExtraTypes';
 import { RGLGridItemState } from '../props/RGLGridItemPropTypes';
-export declare type RGLPositionParams = {
+export type RGLPositionParams = {
     margin: [number, number];
     containerPadding: [number, number];
     containerWidth: number;

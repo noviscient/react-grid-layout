@@ -1,14 +1,14 @@
 import React, { SyntheticEvent } from 'react';
 import { DraggableEvent } from 'react-draggable';
-export declare type RGLDragOverEvent = MouseEvent & {
+export type RGLDragOverEvent = MouseEvent & {
     nativeEvent: {
         layerX: number;
         layerY: number;
     } & MouseEvent;
 };
-export declare type RGLEventCallback = (layout: RGLLayoutItemList, oldItem?: RGLLayoutItem | null, newItem?: RGLLayoutItem | null, placeholder?: RGLLayoutItem | null, event?: SyntheticEvent | DraggableEvent, element?: HTMLElement) => void;
-export declare type RGLLayoutItemList = RGLLayoutItem[];
-export declare type RGLLayoutItem = {
+export type RGLEventCallback = (layout: RGLLayoutItemList, oldItem?: RGLLayoutItem | null, newItem?: RGLLayoutItem | null, placeholder?: RGLLayoutItem | null, event?: SyntheticEvent | DraggableEvent, element?: HTMLElement) => void;
+export type RGLLayoutItemList = RGLLayoutItem[];
+export type RGLLayoutItem = {
     w: number;
     h: number;
     x: number;
@@ -25,38 +25,38 @@ export declare type RGLLayoutItem = {
     resizeHandles?: Array<"s" | "w" | "e" | "n" | "sw" | "nw" | "se" | "ne">;
     isBounded?: boolean;
 };
-export declare type RGLCompactType = "horizontal" | "vertical" | undefined;
-export declare type RGLPosition = {
+export type RGLCompactType = "horizontal" | "vertical" | undefined;
+export type RGLPosition = {
     left: number;
     top: number;
     width: number;
     height: number;
 };
-export declare type RGLPartialPosition = {
+export type RGLPartialPosition = {
     left: number;
     top: number;
 };
-export declare type RGLDroppingPosition = {
+export type RGLDroppingPosition = {
     left: number;
     top: number;
     e: SyntheticEvent | RGLDragOverEvent;
 };
-export declare type RGLSize = {
+export type RGLSize = {
     width: number;
     height: number;
 };
-export declare type RGLGridDragEvent = {
+export type RGLGridDragEvent = {
     e: React.SyntheticEvent | DraggableEvent;
     node: HTMLElement;
     newPosition: RGLPartialPosition;
 };
-export declare type RGLGridResizeEvent = {
+export type RGLGridResizeEvent = {
     e: React.SyntheticEvent;
     node: HTMLElement;
     size: RGLSize;
 };
-export declare type RGLGridItemCallback<Data extends RGLGridDragEvent | RGLGridResizeEvent> = (i: string, w: number, h: number, data: Data) => void;
-export declare type RGLReactDraggableCallbackData = {
+export type RGLGridItemCallback<Data extends RGLGridDragEvent | RGLGridResizeEvent> = (i: string, w: number, h: number, data: Data) => void;
+export type RGLReactDraggableCallbackData = {
     node: HTMLElement;
     x?: number;
     y?: number;

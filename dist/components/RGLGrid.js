@@ -27,7 +27,11 @@ var __assign = (this && this.__assign) || function () {
 };
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -313,15 +317,15 @@ var RGLGrid = /** @class */ (function (_super) {
             pageX = _f.pageX, pageY = _f.pageY, clientX = _f.clientX, clientY = _f.clientY;
             var applicableMaxWidth = typeof finalDroppingItem.maxW === 'number' ? finalDroppingItem.maxW : Infinity;
             var applicableMinWidth = typeof finalDroppingItem.minW === 'number' ? finalDroppingItem.minW : 0;
-            var w = Math.min(applicableMaxWidth, Math.max(applicableMinWidth, finalDroppingItem.w)) * (((_b = _this.props.width) !== null && _b !== void 0 ? _b : 0) / ((_c = _this.props.cols) !== null && _c !== void 0 ? _c : 1)) / 2;
-            var h = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * ((_d = _this.props.rowHeight) !== null && _d !== void 0 ? _d : 0) / 2;
+            var halfW = Math.min(applicableMaxWidth, Math.max(applicableMinWidth, finalDroppingItem.w)) * (((_b = _this.props.width) !== null && _b !== void 0 ? _b : 0) / ((_c = _this.props.cols) !== null && _c !== void 0 ? _c : 1)) / 2;
+            var halfH = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * ((_d = _this.props.rowHeight) !== null && _d !== void 0 ? _d : 0) / 2;
             if (!_this.state.rect)
                 return;
             var actualLayerX = pageX - _this.state.rect.x;
             var actualLayerY = pageY - _this.state.rect.y;
             var droppingPosition = {
-                left: actualLayerX / transformScale,
-                top: actualLayerY / transformScale,
+                left: (actualLayerX - halfW) / transformScale,
+                top: (actualLayerY - halfH) / transformScale,
                 e: e
             };
             // const droppingPosition = {

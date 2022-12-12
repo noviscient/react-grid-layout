@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
 import * as React from "react";
 import type { RGLGridProps } from "../props/RGLPropTypes";
-declare type WPDefaultProps = {
+type WPDefaultProps = {
     measureBeforeMount: boolean;
 };
-declare type WPState = {
+type WPState = {
     width: number;
 };
-declare type ComposedProps<Config extends RGLGridProps> = Config & {
+type ComposedProps<Config extends RGLGridProps> = Config & {
     measureBeforeMount?: boolean;
     className?: string;
     style?: Object;

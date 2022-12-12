@@ -1,13 +1,13 @@
 import { RGLCompactType, RGLLayoutItemList } from '../props/RGLExtraTypes';
-export declare type Breakpoint = string;
-export declare type DefaultBreakpoints = "lg" | "md" | "sm" | "xs" | "xxs";
-export declare type ResponsiveLayout<T extends Breakpoint> = {
+export type Breakpoint = string;
+export type DefaultBreakpoints = "lg" | "md" | "sm" | "xs" | "xxs";
+export type ResponsiveLayout<T extends Breakpoint> = {
     [breakpoint in T]?: RGLLayoutItemList;
 };
-export declare type BreakpointWidthsMap<T extends Breakpoint> = {
+export type BreakpointWidthsMap<T extends Breakpoint> = {
     [breakpoint in T]: number | null | undefined;
 };
-export declare type OnLayoutChangeCallback = (layout: RGLLayoutItemList, breakpoints: {
+export type OnLayoutChangeCallback = (layout: RGLLayoutItemList, breakpoints: {
     [key: Breakpoint]: RGLLayoutItemList;
 }) => void;
 /**

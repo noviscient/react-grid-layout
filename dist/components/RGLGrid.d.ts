@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItemList, RGLLayoutItem } from '../props/RGLExtraTypes';
 import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes';
 import type { ReactElement } from 'react';
-declare type State = {
+type State = {
     activeDrag?: RGLLayoutItem | null;
     layout: RGLLayoutItemList;
     mounted: boolean;
@@ -45,7 +45,7 @@ export declare class RGLGrid extends React.Component<Props, State> {
         transformScale: import("prop-types").Requireable<number>;
         isDroppable: import("prop-types").Requireable<boolean>;
         resizeHandles: import("prop-types").Requireable<(import("../props/RGLPropTypes").RGLResizeHandleAxis | null | undefined)[]>;
-        resizeHandle: import("prop-types").Requireable<string | number | boolean | import("prop-types").ReactElementLike | import("prop-types").ReactNodeArray | ((...args: any[]) => any)>;
+        resizeHandle: import("prop-types").Requireable<NonNullable<import("prop-types").ReactNodeLike | ((...args: any[]) => any)>>;
         onLayoutChange: import("prop-types").Requireable<(...args: any[]) => any>;
         onDragStart: import("prop-types").Requireable<(...args: any[]) => any>;
         onDrag: import("prop-types").Requireable<(...args: any[]) => any>;
