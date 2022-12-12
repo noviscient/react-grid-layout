@@ -49,6 +49,7 @@ specifiers:
   react-transform-hmr: ^1.0.2
   style-loader: ^3.2.1
   timsort: ^0.3.0
+  typescript: ^4.9.4
   webpack: ^5.69.1
   webpack-cli: ^4.9.2
   webpack-dev-server: ^4.7.4
@@ -104,6 +105,7 @@ devDependencies:
   react-transform-hmr: 1.0.4
   style-loader: 3.3.1_webpack@5.75.0
   timsort: 0.3.0
+  typescript: 4.9.4
   webpack: 5.75.0_webpack-cli@4.10.0
   webpack-cli: 4.10.0_uaydpeuxkjjcxdbyfgk36cjdxi
   webpack-dev-server: 4.11.1_pda42hcaj7d62cr262fr632kue
@@ -7051,6 +7053,12 @@ packages:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}
     dependencies:
       is-typedarray: 1.0.0
+    dev: true
+
+  /typescript/4.9.4:
+    resolution: {integrity: sha512-Uz+dTXYzxXXbsFpM86Wh3dKCxrQqUcVMxwU54orwlJjOpO3ao8L7j5lH+dWfTwgCwIuM9GQ2kvVotzYJMXTBZg==}
+    engines: {node: '>=4.2.0'}
+    hasBin: true
     dev: true
 
   /unbox-primitive/1.0.2:
