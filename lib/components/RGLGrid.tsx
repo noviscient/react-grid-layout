@@ -43,7 +43,7 @@ type State = {
 
 
 // End Types
-const fallbackCompactType: RGLCompactType = 'vertical'
+const fallbackCompactType: RGLCompactType = undefined
 const layoutClassName = 'react-grid-layout'
 let isFirefox = false
 // Try...catch will protect from navigator not existing (e.g. node) or a bad implementation of navigator
@@ -798,16 +798,16 @@ export class RGLGrid extends React.Component<Props, State> {
 				onDragEnter={isDroppable? this.onDragEnter : noop}
 				onDragOver={isDroppable? this.onDragOver : noop}
 				>
-				{
-					React.Children.map(this.props.children, child =>
-						this.processGridItem(child)
-					)
-				}
-        		{ isDroppable &&
-					this.state.droppingDOMNode &&
-					this.processGridItem(this.state.droppingDOMNode, true)
-				}
-				{ this.placeholder() }
+					{
+						React.Children.map(this.props.children, child =>
+							this.processGridItem(child)
+						)
+					}
+					{ isDroppable &&
+						this.state.droppingDOMNode &&
+						this.processGridItem(this.state.droppingDOMNode, true)
+					}
+					{ this.placeholder() }
       	</div>
 		);
 	}

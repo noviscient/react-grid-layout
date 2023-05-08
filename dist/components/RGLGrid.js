@@ -72,7 +72,7 @@ var RGLPropTypes_1 = __importDefault(require("../props/RGLPropTypes"));
 var RGLGridItem_1 = __importDefault(require("./RGLGridItem"));
 var bottom = coreUtils_1["default"].bottom, childrenEqual = coreUtils_1["default"].childrenEqual, cloneLayoutItem = coreUtils_1["default"].cloneLayoutItem, compact = coreUtils_1["default"].compact, compactType = coreUtils_1["default"].compactType, getAllCollisions = coreUtils_1["default"].getAllCollisions, getLayoutItem = coreUtils_1["default"].getLayoutItem, moveElement = coreUtils_1["default"].moveElement, noop = coreUtils_1["default"].noop, synchronizeLayoutWithChildren = coreUtils_1["default"].synchronizeLayoutWithChildren, withLayoutItem = coreUtils_1["default"].withLayoutItem;
 // End Types
-var fallbackCompactType = 'vertical';
+var fallbackCompactType = undefined;
 var layoutClassName = 'react-grid-layout';
 var isFirefox = false;
 // Try...catch will protect from navigator not existing (e.g. node) or a bad implementation of navigator
