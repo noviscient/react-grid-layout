@@ -1,20 +1,13 @@
 // @flow
 import PropTypes from "prop-types"
-import React, { ReactChildren } from "react"
 import type {
-	Ref,
-	Children,
-	ReactNode,
-	ReactNodeArray
+	ReactNode
 } from "react"
-import type {
-	RGLDragOverEvent,
-	RGLEventCallback,
-	RGLCompactType,
-	RGLLayoutItemList,
-	RGLLayoutItem
-} from "./RGLExtraTypes"
+import React from "react"
 import rglCoreUtils from '../utils/coreUtils'
+import type {
+	RGLCompactType, RGLEventCallback, RGLLayoutItem, RGLLayoutItemList
+} from "./RGLExtraTypes"
 
 // util
 export type RGLReactRef<T extends HTMLElement> = { current: T | null }
@@ -90,7 +83,8 @@ export type RGLGridProps = {
 	onDropDragOver?: (e: React.DragEvent) => (Partial<RGLLayoutItem> | false),
 	onDrop: (layout: RGLLayoutItemList, item: RGLLayoutItem | undefined, e: React.DragEvent) => void,
 	children: React.ReactChild[],
-	innerRef?: React.RefObject<HTMLDivElement>
+	innerRef?: React.RefObject<HTMLDivElement>,
+	scrollContainerRef?: React.RefObject<HTMLElement>
 };
 
 export type RGLDefaultProps = Omit<
@@ -241,6 +235,7 @@ const RGLPropTypes = {
 	},
 
 	// Optional ref for getting a reference for the wrapping div.
-	innerRef: PropTypes.any
+	innerRef: PropTypes.any,
+	scrollContainerRef: PropTypes.any
 }
 export default RGLPropTypes

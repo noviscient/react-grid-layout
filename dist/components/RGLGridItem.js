@@ -52,8 +52,9 @@ var RGLGridItem = /** @class */ (function (_super) {
         };
         _this.elementRef = react_1["default"].createRef();
         _this.onDragStart = function (e, _a) {
+            var _b, _c, _d;
             var node = _a.node;
-            var _b = _this.props, onDragStart = _b.onDragStart, transformScale = _b.transformScale;
+            var _e = _this.props, onDragStart = _e.onDragStart, transformScale = _e.transformScale;
             if (!onDragStart)
                 return;
             var newPosition = { top: 0, left: 0 };
@@ -68,10 +69,10 @@ var RGLGridItem = /** @class */ (function (_super) {
             var cTop = clientRect.top / transformScale;
             var pTop = parentRect.top / transformScale;
             newPosition.left = cLeft - pLeft + offsetParent.scrollLeft;
-            newPosition.top = cTop - pTop + offsetParent.scrollTop;
+            newPosition.top = cTop - pTop + offsetParent.scrollTop + ((_d = (_c = (_b = _this.props.customScrollContainerRef) === null || _b === void 0 ? void 0 : _b.current) === null || _c === void 0 ? void 0 : _c.scrollTop) !== null && _d !== void 0 ? _d : 0);
             _this.setState({ dragging: newPosition });
             // Call callback with this data
-            var _c = (0, calculateUtils_1.rglCalcXY)(_this.getPositionParams(), newPosition.top, newPosition.left, _this.props.w, _this.props.h), x = _c.x, y = _c.y;
+            var _f = (0, calculateUtils_1.rglCalcXY)(_this.getPositionParams(), newPosition.top, newPosition.left, _this.props.w, _this.props.h), x = _f.x, y = _f.y;
             return onDragStart.call(_this, _this.props.i, x, y, {
                 e: e,
                 node: node,

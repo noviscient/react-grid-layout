@@ -1,15 +1,15 @@
 import clsx from 'clsx'
 import isEqual from 'lodash/isEqual'
-import * as React from 'react'
-import { rglFastGridPropsEqual } from '../props/rglFastPropsEqual'
-import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItemList, RGLLayoutItem } from '../props/RGLExtraTypes'
-import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes'
-import rglCoreUtils from '../utils/coreUtils'
-import { rglCalcXY } from '../utils/calculateUtils'
 import type { ReactElement } from 'react'
+import * as React from 'react'
+import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItem, RGLLayoutItemList } from '../props/RGLExtraTypes'
+import { rglFastGridPropsEqual } from '../props/rglFastPropsEqual'
+import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes'
 import ReactGridLayoutPropTypes from '../props/RGLPropTypes'
-import GridItem from './RGLGridItem'
 import type { RGLPositionParams } from '../utils/calculateUtils'
+import { rglCalcXY } from '../utils/calculateUtils'
+import rglCoreUtils from '../utils/coreUtils'
+import GridItem from './RGLGridItem'
 
 const {
 	bottom,
@@ -101,7 +101,8 @@ export class RGLGrid extends React.Component<Props, State> {
 		onResize: noop,
 		onResizeStop: noop,
 		onDrop: noop,
-		onDropDragOver: () => false
+		onDropDragOver: () => false,
+		scrollContainerRef: React.createRef()
 	};
 
 	state: State = {
@@ -510,6 +511,7 @@ export class RGLGrid extends React.Component<Props, State> {
 				isBounded={ false }
 				useCSSTransforms={ useCSSTransforms }
 				transformScale={ transformScale }
+				customScrollContainerRef={ this.props.scrollContainerRef }
 			>
 				<div />
 			</GridItem>
@@ -662,9 +664,9 @@ export class RGLGrid extends React.Component<Props, State> {
 		const halfH = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * (this.props.rowHeight ?? 0) / 2
 
 		if (!this.state.rect) return
-
+		const customScrollY = (this.props.scrollContainerRef?.current?.scrollTop ?? 0)
 		const actualLayerX = pageX - this.state.rect.x
-		const actualLayerY = pageY - this.state.rect.y
+		const actualLayerY = pageY - this.state.rect.y + customScrollY
 
 		const droppingPosition: RGLDroppingPosition = {
 			left: (actualLayerX - halfW) / transformScale,
@@ -676,7 +678,7 @@ export class RGLGrid extends React.Component<Props, State> {
 		//   top: (layerY - h) / transformScale,
 		//   e
 		// }
-		console.log('dp', droppingPosition) // where is dp?
+		// console.log('dp', droppingPosition, droppingItem, onDragOverResult, customScrollY) // where is dp?
 
 		if (!this.state.droppingDOMNode) {
 			const positionParams: RGLPositionParams = {

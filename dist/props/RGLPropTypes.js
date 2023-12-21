@@ -142,6 +142,7 @@ var RGLPropTypes = {
         });
     },
     // Optional ref for getting a reference for the wrapping div.
-    innerRef: prop_types_1["default"].any
+    innerRef: prop_types_1["default"].any,
+    scrollContainerRef: prop_types_1["default"].any
 };
 exports["default"] = RGLPropTypes;

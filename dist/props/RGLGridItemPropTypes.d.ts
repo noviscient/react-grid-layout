@@ -59,6 +59,7 @@ export type RGLGridItemProps = {
     usePercentages?: boolean;
     transformScale: number;
     droppingPosition?: RGLDroppingPosition;
+    customScrollContainerRef?: React.RefObject<HTMLElement>;
     className: string;
     style?: Object;
     cancel: string;

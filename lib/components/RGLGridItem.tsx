@@ -25,7 +25,7 @@ type DefaultProps = {
 	minW: number,
 	maxH: number,
 	maxW: number,
-	transformScale: number
+	transformScale: number,
 }
 
 /**
@@ -42,7 +42,7 @@ export class RGLGridItem extends React.Component<RGLGridItemProps, State> {
 		minW: 1,
 		maxH: Infinity,
 		maxW: Infinity,
-		transformScale: 1
+		transformScale: 1,
 	};
 
 	state: State = {
@@ -276,7 +276,7 @@ export class RGLGridItem extends React.Component<RGLGridItemProps, State> {
 		const cTop = clientRect.top / transformScale
 		const pTop = parentRect.top / transformScale
 		newPosition.left = cLeft - pLeft + offsetParent.scrollLeft
-		newPosition.top = cTop - pTop + offsetParent.scrollTop
+		newPosition.top = cTop - pTop + offsetParent.scrollTop + (this.props.customScrollContainerRef?.current?.scrollTop ?? 0)
 		this.setState({ dragging: newPosition })
 
 		// Call callback with this data

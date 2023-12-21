@@ -66,9 +66,9 @@ var clsx_1 = __importDefault(require("clsx"));
 var isEqual_1 = __importDefault(require("lodash/isEqual"));
 var React = __importStar(require("react"));
 var rglFastPropsEqual_1 = require("../props/rglFastPropsEqual");
-var coreUtils_1 = __importDefault(require("../utils/coreUtils"));
-var calculateUtils_1 = require("../utils/calculateUtils");
 var RGLPropTypes_1 = __importDefault(require("../props/RGLPropTypes"));
+var calculateUtils_1 = require("../utils/calculateUtils");
+var coreUtils_1 = __importDefault(require("../utils/coreUtils"));
 var RGLGridItem_1 = __importDefault(require("./RGLGridItem"));
 var bottom = coreUtils_1["default"].bottom, childrenEqual = coreUtils_1["default"].childrenEqual, cloneLayoutItem = coreUtils_1["default"].cloneLayoutItem, compact = coreUtils_1["default"].compact, compactType = coreUtils_1["default"].compactType, getAllCollisions = coreUtils_1["default"].getAllCollisions, getLayoutItem = coreUtils_1["default"].getLayoutItem, moveElement = coreUtils_1["default"].moveElement, noop = coreUtils_1["default"].noop, synchronizeLayoutWithChildren = coreUtils_1["default"].synchronizeLayoutWithChildren, withLayoutItem = coreUtils_1["default"].withLayoutItem;
 // End Types
@@ -287,7 +287,7 @@ var RGLGrid = /** @class */ (function (_super) {
         // Called while dragging an element. Part of browser native drag/drop API.
         // Native event target might be the layout itself, or an element within the layout.
         _this.onDragOver = function (e) {
-            var _a, _b, _c, _d;
+            var _a, _b, _c, _d, _e, _f, _g;
             e.preventDefault(); // Prevent any browser native action
             e.stopPropagation();
             // we should ignore events from layout's children in Firefox
@@ -298,7 +298,7 @@ var RGLGrid = /** @class */ (function (_super) {
                 !((_a = e.nativeEvent.target) === null || _a === void 0 ? void 0 : _a.classList.contains(layoutClassName))) {
                 return false;
             }
-            var _e = _this.props, droppingItem = _e.droppingItem, onDropDragOver = _e.onDropDragOver, margin = _e.margin, cols = _e.cols, rowHeight = _e.rowHeight, maxRows = _e.maxRows, width = _e.width, containerPadding = _e.containerPadding, transformScale = _e.transformScale;
+            var _h = _this.props, droppingItem = _h.droppingItem, onDropDragOver = _h.onDropDragOver, margin = _h.margin, cols = _h.cols, rowHeight = _h.rowHeight, maxRows = _h.maxRows, width = _h.width, containerPadding = _h.containerPadding, transformScale = _h.transformScale;
             // Allow user to customize the dropping item or short-circuit the drop based on the results
             // of the `onDragOver(e: Event)` callback.
             var onDragOverResult = onDropDragOver === null || onDropDragOver === void 0 ? void 0 : onDropDragOver(e);
@@ -311,18 +311,19 @@ var RGLGrid = /** @class */ (function (_super) {
             var finalDroppingItem = __assign(__assign({}, droppingItem), onDragOverResult);
             var layout = _this.state.layout;
             // This is relative to the DOM element that this event fired for.
-            var _f = e.nativeEvent, 
+            var _j = e.nativeEvent, 
             // layerX, // don't use this
             // layerY, // don't use this
-            pageX = _f.pageX, pageY = _f.pageY, clientX = _f.clientX, clientY = _f.clientY;
+            pageX = _j.pageX, pageY = _j.pageY, clientX = _j.clientX, clientY = _j.clientY;
             var applicableMaxWidth = typeof finalDroppingItem.maxW === 'number' ? finalDroppingItem.maxW : Infinity;
             var applicableMinWidth = typeof finalDroppingItem.minW === 'number' ? finalDroppingItem.minW : 0;
             var halfW = Math.min(applicableMaxWidth, Math.max(applicableMinWidth, finalDroppingItem.w)) * (((_b = _this.props.width) !== null && _b !== void 0 ? _b : 0) / ((_c = _this.props.cols) !== null && _c !== void 0 ? _c : 1)) / 2;
             var halfH = Math.min(finalDroppingItem.maxH || Infinity, Math.max(finalDroppingItem.minH || 0, finalDroppingItem.h)) * ((_d = _this.props.rowHeight) !== null && _d !== void 0 ? _d : 0) / 2;
             if (!_this.state.rect)
                 return;
+            var customScrollY = ((_g = (_f = (_e = _this.props.scrollContainerRef) === null || _e === void 0 ? void 0 : _e.current) === null || _f === void 0 ? void 0 : _f.scrollTop) !== null && _g !== void 0 ? _g : 0);
             var actualLayerX = pageX - _this.state.rect.x;
-            var actualLayerY = pageY - _this.state.rect.y;
+            var actualLayerY = pageY - _this.state.rect.y + customScrollY;
             var droppingPosition = {
                 left: (actualLayerX - halfW) / transformScale,
                 top: (actualLayerY - halfH) / transformScale,
@@ -333,7 +334,7 @@ var RGLGrid = /** @class */ (function (_super) {
             //   top: (layerY - h) / transformScale,
             //   e
             // }
-            console.log('dp', droppingPosition); // where is dp?
+            console.log('dp', droppingPosition, droppingItem, onDragOverResult, customScrollY); // where is dp?
             if (!_this.state.droppingDOMNode) {
                 var positionParams = {
                     cols: cols,
@@ -356,7 +357,7 @@ var RGLGrid = /** @class */ (function (_super) {
                 });
             }
             else if (_this.state.droppingPosition) {
-                var _g = _this.state.droppingPosition, left = _g.left, top_1 = _g.top;
+                var _k = _this.state.droppingPosition, left = _k.left, top_1 = _k.top;
                 var shouldUpdatePosition = 
                 // left != layerX ||
                 // top != layerY
@@ -499,7 +500,7 @@ var RGLGrid = /** @class */ (function (_super) {
             return null;
         var _a = this.props, width = _a.width, cols = _a.cols, margin = _a.margin, containerPadding = _a.containerPadding, rowHeight = _a.rowHeight, maxRows = _a.maxRows, useCSSTransforms = _a.useCSSTransforms, transformScale = _a.transformScale;
         // {...this.state.activeDrag} is pretty slow, actually
-        return (React.createElement(RGLGridItem_1["default"], { w: activeDrag.w, h: activeDrag.h, x: activeDrag.x, y: activeDrag.y, i: activeDrag.i, className: 'react-grid-placeholder', containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, isDraggable: false, isResizable: false, isBounded: false, useCSSTransforms: useCSSTransforms, transformScale: transformScale },
+        return (React.createElement(RGLGridItem_1["default"], { w: activeDrag.w, h: activeDrag.h, x: activeDrag.x, y: activeDrag.y, i: activeDrag.i, className: 'react-grid-placeholder', containerWidth: width, cols: cols, margin: margin, containerPadding: containerPadding || margin, maxRows: maxRows, rowHeight: rowHeight, isDraggable: false, isResizable: false, isBounded: false, useCSSTransforms: useCSSTransforms, transformScale: transformScale, customScrollContainerRef: this.props.scrollContainerRef },
             React.createElement("div", null)));
     };
     /**
@@ -584,7 +585,8 @@ var RGLGrid = /** @class */ (function (_super) {
         onResize: noop,
         onResizeStop: noop,
         onDrop: noop,
-        onDropDragOver: function () { return false; }
+        onDropDragOver: function () { return false; },
+        scrollContainerRef: React.createRef()
     };
     return RGLGrid;
 }(React.Component));

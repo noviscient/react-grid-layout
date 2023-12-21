@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import React from "react";
 import type { ReactNode } from "react";
-import type { RGLEventCallback, RGLCompactType, RGLLayoutItemList, RGLLayoutItem } from "./RGLExtraTypes";
+import React from "react";
+import type { RGLCompactType, RGLEventCallback, RGLLayoutItem, RGLLayoutItemList } from "./RGLExtraTypes";
 export type RGLReactRef<T extends HTMLElement> = {
     current: T | null;
 };
@@ -46,6 +46,7 @@ export type RGLGridProps = {
     onDrop: (layout: RGLLayoutItemList, item: RGLLayoutItem | undefined, e: React.DragEvent) => void;
     children: React.ReactChild[];
     innerRef?: React.RefObject<HTMLDivElement>;
+    scrollContainerRef?: React.RefObject<HTMLElement>;
 };
 export type RGLDefaultProps = Omit<RGLGridProps, 'children' | 'width'>;
 declare const RGLPropTypes: {
@@ -88,5 +89,6 @@ declare const RGLPropTypes: {
     }>>;
     children: (props: any, propName: any) => void;
     innerRef: PropTypes.Requireable<any>;
+    scrollContainerRef: PropTypes.Requireable<any>;
 };
 export default RGLPropTypes;

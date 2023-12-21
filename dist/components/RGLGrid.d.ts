@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItemList, RGLLayoutItem } from '../props/RGLExtraTypes';
-import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes';
 import type { ReactElement } from 'react';
+import * as React from 'react';
+import { RGLCompactType, RGLDroppingPosition, RGLGridDragEvent, RGLGridResizeEvent, RGLLayoutItem, RGLLayoutItemList } from '../props/RGLExtraTypes';
+import type { RGLDefaultProps, RGLGridProps as Props } from '../props/RGLPropTypes';
 type State = {
     activeDrag?: RGLLayoutItem | null;
     layout: RGLLayoutItemList;
@@ -61,6 +61,7 @@ export declare class RGLGrid extends React.Component<Props, State> {
         }>>;
         children: (props: any, propName: any) => void;
         innerRef: import("prop-types").Requireable<any>;
+        scrollContainerRef: import("prop-types").Requireable<any>;
     };
     static defaultProps: RGLDefaultProps;
     state: State;
